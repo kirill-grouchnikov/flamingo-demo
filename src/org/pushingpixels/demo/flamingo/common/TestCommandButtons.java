@@ -76,445 +76,419 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class TestCommandButtons extends JFrame {
-	private enum PopupKind {
-		SIMPLE, SCROLLABLE, COMPLEX;
+    private enum PopupKind {
+        SIMPLE, SCROLLABLE, COMPLEX;
 
-		@Override
-		public String toString() {
-			return name().toLowerCase();
-		};
-	}
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        };
+    }
 
-	protected ResourceBundle resourceBundle;
+    protected ResourceBundle resourceBundle;
 
-	protected Locale currLocale;
+    protected Locale currLocale;
 
-	private JPanel buttonPanel;
+    private JPanel buttonPanel;
 
-	private JComboBox popupCombo;
+    private JComboBox popupCombo;
 
-	public TestCommandButtons() {
-		super("Command button test");
-		this.setIconImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+    public TestCommandButtons() {
+        super("Command button test");
+        this.setIconImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
 
-		this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
-		currLocale = Locale.getDefault();
-		resourceBundle = ResourceBundle.getBundle("test.resource.Resources",
-				currLocale);
+        currLocale = Locale.getDefault();
+        resourceBundle = ResourceBundle
+                .getBundle("org.pushingpixels.demo.flamingo.resource.Resources", currLocale);
 
-		buttonPanel = getButtonPanel();
-		this.add(buttonPanel, BorderLayout.CENTER);
+        buttonPanel = getButtonPanel();
+        this.add(buttonPanel, BorderLayout.CENTER);
 
-		JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		this.configureControlPanel(controlPanel);
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        this.configureControlPanel(controlPanel);
 
-		this.add(controlPanel, BorderLayout.SOUTH);
-	}
+        this.add(controlPanel, BorderLayout.SOUTH);
+    }
 
-	protected JPanel getButtonPanel() {
-		FormLayout lm = new FormLayout("right:pref, 10dlu, center:pref, 4dlu,"
-				+ "center:pref, 4dlu, center:pref, " + "4dlu, center:pref", "");
-		// lm.setColumnGroups(new int[][] { { 3, 5, 7, 9 } });
-		DefaultFormBuilder builder = new DefaultFormBuilder(lm);
-		builder.setDefaultDialogBorder();
+    protected JPanel getButtonPanel() {
+        FormLayout lm = new FormLayout("right:pref, 10dlu, center:pref, 4dlu,"
+                + "center:pref, 4dlu, center:pref, " + "4dlu, center:pref", "");
+        // lm.setColumnGroups(new int[][] { { 3, 5, 7, 9 } });
+        DefaultFormBuilder builder = new DefaultFormBuilder(lm);
+        builder.setDefaultDialogBorder();
 
-		builder.append("");
-		builder.append("Action only");
-		builder.append("Action (main) + popup");
-		builder.append("Action + popup (main)");
-		builder.append("Popup only");
+        builder.append("");
+        builder.append("Action only");
+        builder.append("Action (main) + popup");
+        builder.append("Action + popup (main)");
+        builder.append("Popup only");
 
-		addButtons(builder, CommandButtonDisplayState.BIG);
-		addButtons(builder, CommandButtonDisplayState.TILE);
-		addButtons(builder, CommandButtonDisplayState.MEDIUM);
-		addButtons(builder, CommandButtonDisplayState.SMALL);
+        addButtons(builder, CommandButtonDisplayState.BIG);
+        addButtons(builder, CommandButtonDisplayState.TILE);
+        addButtons(builder, CommandButtonDisplayState.MEDIUM);
+        addButtons(builder, CommandButtonDisplayState.SMALL);
 
-		JPanel buttonsPanel = builder.getPanel();
-		return buttonsPanel;
-	}
+        JPanel buttonsPanel = builder.getPanel();
+        return buttonsPanel;
+    }
 
-	protected static String stamp() {
-		return new SimpleDateFormat("HH:mm:ss.SSS").format(new Date());
-	}
+    protected static String stamp() {
+        return new SimpleDateFormat("HH:mm:ss.SSS").format(new Date());
+    }
 
-	protected class TestPopupCallback implements PopupPanelCallback {
-		@Override
-		public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-			MessageFormat mf = new MessageFormat(resourceBundle
-					.getString("TestMenuItem.text"));
-			mf.setLocale(currLocale);
+    protected class TestPopupCallback implements PopupPanelCallback {
+        @Override
+        public JPopupPanel getPopupPanel(JCommandButton commandButton) {
+            MessageFormat mf = new MessageFormat(resourceBundle.getString("TestMenuItem.text"));
+            mf.setLocale(currLocale);
 
-			PopupKind popupKind = (PopupKind) popupCombo.getSelectedItem();
-			switch (popupKind) {
-			case SIMPLE:
-				JCommandPopupMenu simpleMenu = new JCommandPopupMenu();
+            PopupKind popupKind = (PopupKind) popupCombo.getSelectedItem();
+            switch (popupKind) {
+            case SIMPLE:
+                JCommandPopupMenu simpleMenu = new JCommandPopupMenu();
 
-				simpleMenu.addMenuButton(new JCommandMenuButton(mf
-						.format(new Object[] { "1" }), new Address_book_new()));
-				simpleMenu.addMenuButton(new JCommandMenuButton(mf
-						.format(new Object[] { "2" }), new EmptyResizableIcon(
-						16)));
-				simpleMenu.addMenuButton(new JCommandMenuButton(mf
-						.format(new Object[] { "3" }), new EmptyResizableIcon(
-						16)));
-				simpleMenu.addMenuSeparator();
-				simpleMenu.addMenuButton(new JCommandMenuButton(mf
-						.format(new Object[] { "4" }), new EmptyResizableIcon(
-						16)));
-				simpleMenu.addMenuButton(new JCommandMenuButton(mf
-						.format(new Object[] { "5" }), new Text_x_generic()));
-				return simpleMenu;
-			case SCROLLABLE:
-				JCommandPopupMenu scrollableMenu = new JCommandPopupMenu();
+                simpleMenu.addMenuButton(new JCommandMenuButton(mf.format(new Object[] { "1" }),
+                        new Address_book_new()));
+                simpleMenu.addMenuButton(new JCommandMenuButton(mf.format(new Object[] { "2" }),
+                        new EmptyResizableIcon(16)));
+                simpleMenu.addMenuButton(new JCommandMenuButton(mf.format(new Object[] { "3" }),
+                        new EmptyResizableIcon(16)));
+                simpleMenu.addMenuSeparator();
+                simpleMenu.addMenuButton(new JCommandMenuButton(mf.format(new Object[] { "4" }),
+                        new EmptyResizableIcon(16)));
+                simpleMenu.addMenuButton(new JCommandMenuButton(mf.format(new Object[] { "5" }),
+                        new Text_x_generic()));
+                return simpleMenu;
+            case SCROLLABLE:
+                JCommandPopupMenu scrollableMenu = new JCommandPopupMenu();
 
-				for (int i = 0; i < 20; i++) {
-					final JCommandMenuButton smb = new JCommandMenuButton(mf
-							.format(new Object[] { i }), new Text_x_generic());
-					smb.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							System.out.println("Invoked action on '"
-									+ smb.getText() + "'");
-						}
-					});
-					scrollableMenu.addMenuButton(smb);
-				}
-				scrollableMenu.setMaxVisibleMenuButtons(8);
-				return scrollableMenu;
+                for (int i = 0; i < 20; i++) {
+                    final JCommandMenuButton smb = new JCommandMenuButton(
+                            mf.format(new Object[] { i }), new Text_x_generic());
+                    smb.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("Invoked action on '" + smb.getText() + "'");
+                        }
+                    });
+                    scrollableMenu.addMenuButton(smb);
+                }
+                scrollableMenu.setMaxVisibleMenuButtons(8);
+                return scrollableMenu;
 
-			case COMPLEX:
-				JCommandPopupMenu complexMenu = new JCommandPopupMenu(
-						new QuickStylesPanel(resourceBundle, currLocale), 5, 3);
-				complexMenu.addMenuButton(new JCommandMenuButton(resourceBundle
-						.getString("SaveSelection.text"),
-						new X_office_document()));
-				complexMenu.addMenuButton(new JCommandMenuButton(resourceBundle
-						.getString("ClearSelection.text"),
-						new EmptyResizableIcon(16)));
-				complexMenu.addMenuSeparator();
-				complexMenu.addMenuButton(new JCommandMenuButton(resourceBundle
-						.getString("ApplyStyles.text"), new EmptyResizableIcon(
-						16)));
-				return complexMenu;
-			}
-			return null;
-		}
-	}
+            case COMPLEX:
+                JCommandPopupMenu complexMenu = new JCommandPopupMenu(
+                        new QuickStylesPanel(resourceBundle, currLocale), 5, 3);
+                complexMenu.addMenuButton(new JCommandMenuButton(
+                        resourceBundle.getString("SaveSelection.text"), new X_office_document()));
+                complexMenu.addMenuButton(
+                        new JCommandMenuButton(resourceBundle.getString("ClearSelection.text"),
+                                new EmptyResizableIcon(16)));
+                complexMenu.addMenuSeparator();
+                complexMenu.addMenuButton(new JCommandMenuButton(
+                        resourceBundle.getString("ApplyStyles.text"), new EmptyResizableIcon(16)));
+                return complexMenu;
+            }
+            return null;
+        }
+    }
 
-	private void addButtons(DefaultFormBuilder builder,
-			CommandButtonDisplayState state) {
-		builder.append(state.getDisplayName() + " state");
+    private void addButtons(DefaultFormBuilder builder, CommandButtonDisplayState state) {
+        builder.append(state.getDisplayName() + " state");
 
-		JCommandButton actionButton = createActionButton(state);
-		builder.append(actionButton);
+        JCommandButton actionButton = createActionButton(state);
+        builder.append(actionButton);
 
-		JCommandButton actionAndPopupMainActionButton = createActionAndPopupMainActionButton(state);
-		builder.append(actionAndPopupMainActionButton);
+        JCommandButton actionAndPopupMainActionButton = createActionAndPopupMainActionButton(state);
+        builder.append(actionAndPopupMainActionButton);
 
-		JCommandButton actionAndPopupMainPopupButton = createActionAndPopupMainPopupButton(state);
-		builder.append(actionAndPopupMainPopupButton);
+        JCommandButton actionAndPopupMainPopupButton = createActionAndPopupMainPopupButton(state);
+        builder.append(actionAndPopupMainPopupButton);
 
-		JCommandButton popupButton = createPopupButton(state);
-		builder.append(popupButton);
-	}
+        JCommandButton popupButton = createPopupButton(state);
+        builder.append(popupButton);
+    }
 
-	protected JCommandButton createPopupButton(CommandButtonDisplayState state) {
-		JCommandButton popupButton = new JCommandButton(resourceBundle
-				.getString("SelectAll.text"), new Edit_paste());
-		popupButton.setExtraText(resourceBundle
-				.getString("SelectAll.textExtra"));
-		popupButton.setPopupCallback(new TestPopupCallback());
-		popupButton
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
-		popupButton.setDisplayState(state);
-		popupButton.setFlat(false);
-		return popupButton;
-	}
+    protected JCommandButton createPopupButton(CommandButtonDisplayState state) {
+        JCommandButton popupButton = new JCommandButton(resourceBundle.getString("SelectAll.text"),
+                new Edit_paste());
+        popupButton.setExtraText(resourceBundle.getString("SelectAll.textExtra"));
+        popupButton.setPopupCallback(new TestPopupCallback());
+        popupButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
+        popupButton.setDisplayState(state);
+        popupButton.setFlat(false);
+        return popupButton;
+    }
 
-	protected JCommandButton createActionAndPopupMainPopupButton(
-			CommandButtonDisplayState state) {
-		JCommandButton copyButton = new JCommandButton(resourceBundle
-				.getString("Copy.text"), new Edit_copy());
-		copyButton.setExtraText(resourceBundle.getString("Copy.textExtra"));
-		copyButton.setPopupCallback(new TestPopupCallback());
-		copyButton
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
-		copyButton.setDisplayState(state);
-		copyButton.setFlat(false);
-		copyButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(stamp() + ": Copy");
-			}
-		});
-		return copyButton;
-	}
+    protected JCommandButton createActionAndPopupMainPopupButton(CommandButtonDisplayState state) {
+        JCommandButton copyButton = new JCommandButton(resourceBundle.getString("Copy.text"),
+                new Edit_copy());
+        copyButton.setExtraText(resourceBundle.getString("Copy.textExtra"));
+        copyButton.setPopupCallback(new TestPopupCallback());
+        copyButton
+                .setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
+        copyButton.setDisplayState(state);
+        copyButton.setFlat(false);
+        copyButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(stamp() + ": Copy");
+            }
+        });
+        return copyButton;
+    }
 
-	protected JCommandButton createActionAndPopupMainActionButton(
-			CommandButtonDisplayState state) {
-		JCommandButton cutButton = new JCommandButton(resourceBundle
-				.getString("Cut.text"), new Edit_cut());
-		cutButton.setExtraText(resourceBundle.getString("Cut.textExtra"));
-		cutButton.setPopupCallback(new TestPopupCallback());
-		cutButton
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
-		cutButton.setDisplayState(state);
-		cutButton.setFlat(false);
-		cutButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(stamp() + ": Cut");
-			}
-		});
-		return cutButton;
-	}
+    protected JCommandButton createActionAndPopupMainActionButton(CommandButtonDisplayState state) {
+        JCommandButton cutButton = new JCommandButton(resourceBundle.getString("Cut.text"),
+                new Edit_cut());
+        cutButton.setExtraText(resourceBundle.getString("Cut.textExtra"));
+        cutButton.setPopupCallback(new TestPopupCallback());
+        cutButton.setCommandButtonKind(
+                JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
+        cutButton.setDisplayState(state);
+        cutButton.setFlat(false);
+        cutButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(stamp() + ": Cut");
+            }
+        });
+        return cutButton;
+    }
 
-	protected JCommandButton createActionButton(CommandButtonDisplayState state) {
-		JCommandButton mainButton = new JCommandButton(resourceBundle
-				.getString("Paste.text"), new Edit_paste());
-		mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
-				new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
-						null)));
-		mainButton.setExtraText(resourceBundle.getString("Paste.textExtra"));
-		mainButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(stamp() + ": Main paste");
-			}
-		});
-		mainButton
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_ONLY);
-		mainButton.setDisplayState(state);
-		mainButton.setFlat(false);
-		return mainButton;
-	}
+    protected JCommandButton createActionButton(CommandButtonDisplayState state) {
+        JCommandButton mainButton = new JCommandButton(resourceBundle.getString("Paste.text"),
+                new Edit_paste());
+        mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
+                new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null)));
+        mainButton.setExtraText(resourceBundle.getString("Paste.textExtra"));
+        mainButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(stamp() + ": Main paste");
+            }
+        });
+        mainButton.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_ONLY);
+        mainButton.setDisplayState(state);
+        mainButton.setFlat(false);
+        return mainButton;
+    }
 
-	protected void configureControlPanel(JPanel controlPanel) {
-		controlPanel.add(LookAndFeelSwitcher.getLookAndFeelSwitcher(this));
+    protected void configureControlPanel(JPanel controlPanel) {
+        controlPanel.add(LookAndFeelSwitcher.getLookAndFeelSwitcher(this));
 
-		final JCheckBox enabled = new JCheckBox("enabled");
-		enabled.setSelected(true);
-		enabled.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						scan(TestCommandButtons.this);
-						repaint();
-					}
+        final JCheckBox enabled = new JCheckBox("enabled");
+        enabled.setSelected(true);
+        enabled.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        scan(TestCommandButtons.this);
+                        repaint();
+                    }
 
-					private void scan(Container c) {
-						for (int i = 0; i < c.getComponentCount(); i++) {
-							Component child = c.getComponent(i);
-							if (child instanceof AbstractCommandButton)
-								child.setEnabled(enabled.isSelected());
-							if (child instanceof Container)
-								scan((Container) child);
-						}
-					}
-				});
-			}
-		});
-		controlPanel.add(enabled);
+                    private void scan(Container c) {
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            Component child = c.getComponent(i);
+                            if (child instanceof AbstractCommandButton)
+                                child.setEnabled(enabled.isSelected());
+                            if (child instanceof Container)
+                                scan((Container) child);
+                        }
+                    }
+                });
+            }
+        });
+        controlPanel.add(enabled);
 
-		final JCheckBox actionEnabled = new JCheckBox("action enabled");
-		actionEnabled.setSelected(true);
-		actionEnabled.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						scan(TestCommandButtons.this);
-						repaint();
-					}
+        final JCheckBox actionEnabled = new JCheckBox("action enabled");
+        actionEnabled.setSelected(true);
+        actionEnabled.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        scan(TestCommandButtons.this);
+                        repaint();
+                    }
 
-					private void scan(Container c) {
-						for (int i = 0; i < c.getComponentCount(); i++) {
-							Component child = c.getComponent(i);
-							if (child instanceof AbstractCommandButton)
-								((AbstractCommandButton) child)
-										.getActionModel().setEnabled(
-												actionEnabled.isSelected());
-							if (child instanceof Container)
-								scan((Container) child);
-						}
-					}
-				});
-			}
-		});
-		controlPanel.add(actionEnabled);
+                    private void scan(Container c) {
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            Component child = c.getComponent(i);
+                            if (child instanceof AbstractCommandButton)
+                                ((AbstractCommandButton) child).getActionModel()
+                                        .setEnabled(actionEnabled.isSelected());
+                            if (child instanceof Container)
+                                scan((Container) child);
+                        }
+                    }
+                });
+            }
+        });
+        controlPanel.add(actionEnabled);
 
-		final JCheckBox popupEnabled = new JCheckBox("popup enabled");
-		popupEnabled.setSelected(true);
-		popupEnabled.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						scan(TestCommandButtons.this);
-						repaint();
-					}
+        final JCheckBox popupEnabled = new JCheckBox("popup enabled");
+        popupEnabled.setSelected(true);
+        popupEnabled.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        scan(TestCommandButtons.this);
+                        repaint();
+                    }
 
-					private void scan(Container c) {
-						for (int i = 0; i < c.getComponentCount(); i++) {
-							Component child = c.getComponent(i);
-							if (child instanceof JCommandButton)
-								((JCommandButton) child).getPopupModel()
-										.setEnabled(popupEnabled.isSelected());
-							if (child instanceof Container)
-								scan((Container) child);
-						}
-					}
-				});
-			}
-		});
-		controlPanel.add(popupEnabled);
+                    private void scan(Container c) {
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            Component child = c.getComponent(i);
+                            if (child instanceof JCommandButton)
+                                ((JCommandButton) child).getPopupModel()
+                                        .setEnabled(popupEnabled.isSelected());
+                            if (child instanceof Container)
+                                scan((Container) child);
+                        }
+                    }
+                });
+            }
+        });
+        controlPanel.add(popupEnabled);
 
-		final JCheckBox flat = new JCheckBox("flat");
-		flat.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						scan(TestCommandButtons.this);
-						repaint();
-					}
+        final JCheckBox flat = new JCheckBox("flat");
+        flat.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        scan(TestCommandButtons.this);
+                        repaint();
+                    }
 
-					private void scan(Container c) {
-						for (int i = 0; i < c.getComponentCount(); i++) {
-							Component child = c.getComponent(i);
-							if (child instanceof AbstractCommandButton)
-								((AbstractCommandButton) child).setFlat(flat
-										.isSelected());
-							if (child instanceof Container)
-								scan((Container) child);
-						}
-					}
-				});
-			}
-		});
-		controlPanel.add(flat);
+                    private void scan(Container c) {
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            Component child = c.getComponent(i);
+                            if (child instanceof AbstractCommandButton)
+                                ((AbstractCommandButton) child).setFlat(flat.isSelected());
+                            if (child instanceof Container)
+                                scan((Container) child);
+                        }
+                    }
+                });
+            }
+        });
+        controlPanel.add(flat);
 
-		final JCheckBox downward = new JCheckBox("downward");
-		downward.setSelected(true);
-		downward.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						scan(TestCommandButtons.this);
-						repaint();
-					}
+        final JCheckBox downward = new JCheckBox("downward");
+        downward.setSelected(true);
+        downward.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        scan(TestCommandButtons.this);
+                        repaint();
+                    }
 
-					private void scan(Container c) {
-						for (int i = 0; i < c.getComponentCount(); i++) {
-							Component child = c.getComponent(i);
-							if (child instanceof JCommandButton)
-								((JCommandButton) child)
-										.setPopupOrientationKind(downward
-												.isSelected() ? CommandButtonPopupOrientationKind.DOWNWARD
-												: CommandButtonPopupOrientationKind.SIDEWARD);
-							if (child instanceof Container)
-								scan((Container) child);
-						}
-					}
-				});
-			}
-		});
-		controlPanel.add(downward);
+                    private void scan(Container c) {
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            Component child = c.getComponent(i);
+                            if (child instanceof JCommandButton)
+                                ((JCommandButton) child)
+                                        .setPopupOrientationKind(downward.isSelected()
+                                                ? CommandButtonPopupOrientationKind.DOWNWARD
+                                                : CommandButtonPopupOrientationKind.SIDEWARD);
+                            if (child instanceof Container)
+                                scan((Container) child);
+                        }
+                    }
+                });
+            }
+        });
+        controlPanel.add(downward);
 
-		popupCombo = new JComboBox(PopupKind.values());
-		popupCombo.setSelectedItem(PopupKind.SIMPLE);
-		controlPanel.add(popupCombo);
+        popupCombo = new JComboBox(PopupKind.values());
+        popupCombo.setSelectedItem(PopupKind.SIMPLE);
+        controlPanel.add(popupCombo);
 
-		JComboBox localeSwitcher = LocaleSwitcher
-				.getLocaleSwitcher(new LocaleCallback() {
-					@Override
-					public void onLocaleSelected(Locale selected) {
-						currLocale = selected;
-						resourceBundle = ResourceBundle.getBundle(
-								"test.resource.Resources", currLocale);
-						remove(buttonPanel);
-						buttonPanel = getButtonPanel();
-						add(buttonPanel, BorderLayout.CENTER);
-						Window window = SwingUtilities
-								.getWindowAncestor(buttonPanel);
-						window.applyComponentOrientation(ComponentOrientation
-								.getOrientation(currLocale));
-						SwingUtilities.updateComponentTreeUI(window);
-					}
-				});
-		controlPanel.add(localeSwitcher);
-	}
+        JComboBox localeSwitcher = LocaleSwitcher.getLocaleSwitcher(new LocaleCallback() {
+            @Override
+            public void onLocaleSelected(Locale selected) {
+                currLocale = selected;
+                resourceBundle = ResourceBundle.getBundle("test.resource.Resources", currLocale);
+                remove(buttonPanel);
+                buttonPanel = getButtonPanel();
+                add(buttonPanel, BorderLayout.CENTER);
+                Window window = SwingUtilities.getWindowAncestor(buttonPanel);
+                window.applyComponentOrientation(ComponentOrientation.getOrientation(currLocale));
+                SwingUtilities.updateComponentTreeUI(window);
+            }
+        });
+        controlPanel.add(localeSwitcher);
+    }
 
-	/**
-	 * Main method for testing.
-	 * 
-	 * @param args
-	 *            Ignored.
-	 */
-	public static void main(String[] args) {
-		UIManager.installLookAndFeel("JGoodies Plastic",
-				"com.jgoodies.looks.plastic.PlasticLookAndFeel");
-		UIManager.installLookAndFeel("JGoodies PlasticXP",
-				"com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-		UIManager.installLookAndFeel("JGoodies Plastic3D",
-				"com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-		UIManager.installLookAndFeel("JGoodies Windows",
-				"com.jgoodies.looks.windows.WindowsLookAndFeel");
+    /**
+     * Main method for testing.
+     * 
+     * @param args
+     *            Ignored.
+     */
+    public static void main(String[] args) {
+        UIManager.installLookAndFeel("JGoodies Plastic",
+                "com.jgoodies.looks.plastic.PlasticLookAndFeel");
+        UIManager.installLookAndFeel("JGoodies PlasticXP",
+                "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+        UIManager.installLookAndFeel("JGoodies Plastic3D",
+                "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+        UIManager.installLookAndFeel("JGoodies Windows",
+                "com.jgoodies.looks.windows.WindowsLookAndFeel");
 
-		UIManager.installLookAndFeel("Synthetica base",
-				"de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlackMoon",
-				"de.javasoft.plaf.synthetica.SyntheticaBlackMoonLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlackStar",
-				"de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlueIce",
-				"de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlueMoon",
-				"de.javasoft.plaf.synthetica.SyntheticaBlueMoonLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlueSteel",
-				"de.javasoft.plaf.synthetica.SyntheticaBlueSteelLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica GreenDream",
-				"de.javasoft.plaf.synthetica.SyntheticaGreenDreamLookAndFeel");
-		UIManager
-				.installLookAndFeel("Synthetica MauveMetallic",
-						"de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel");
-		UIManager
-				.installLookAndFeel("Synthetica OrangeMetallic",
-						"de.javasoft.plaf.synthetica.SyntheticaOrangeMetallicLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica SkyMetallic",
-				"de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica SilverMoon",
-				"de.javasoft.plaf.synthetica.SyntheticaSilverMoonLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica WhiteVision",
-				"de.javasoft.plaf.synthetica.SyntheticaWhiteVisionLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica base",
+                "de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlackMoon",
+                "de.javasoft.plaf.synthetica.SyntheticaBlackMoonLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlackStar",
+                "de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlueIce",
+                "de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlueMoon",
+                "de.javasoft.plaf.synthetica.SyntheticaBlueMoonLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlueSteel",
+                "de.javasoft.plaf.synthetica.SyntheticaBlueSteelLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica GreenDream",
+                "de.javasoft.plaf.synthetica.SyntheticaGreenDreamLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica MauveMetallic",
+                "de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica OrangeMetallic",
+                "de.javasoft.plaf.synthetica.SyntheticaOrangeMetallicLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica SkyMetallic",
+                "de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica SilverMoon",
+                "de.javasoft.plaf.synthetica.SyntheticaSilverMoonLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica WhiteVision",
+                "de.javasoft.plaf.synthetica.SyntheticaWhiteVisionLookAndFeel");
 
-		UIManager.installLookAndFeel("A03", "a03.swing.plaf.A03LookAndFeel");
-		UIManager.installLookAndFeel("Liquid",
-				"com.birosoft.liquid.LiquidLookAndFeel");
-		UIManager.installLookAndFeel("Napkin",
-				"net.sourceforge.napkinlaf.NapkinLookAndFeel");
-		UIManager.installLookAndFeel("Pagosoft",
-				"com.pagosoft.plaf.PgsLookAndFeel");
-		UIManager.installLookAndFeel("Squareness",
-				"net.beeger.squareness.SquarenessLookAndFeel");
+        UIManager.installLookAndFeel("A03", "a03.swing.plaf.A03LookAndFeel");
+        UIManager.installLookAndFeel("Liquid", "com.birosoft.liquid.LiquidLookAndFeel");
+        UIManager.installLookAndFeel("Napkin", "net.sourceforge.napkinlaf.NapkinLookAndFeel");
+        UIManager.installLookAndFeel("Pagosoft", "com.pagosoft.plaf.PgsLookAndFeel");
+        UIManager.installLookAndFeel("Squareness", "net.beeger.squareness.SquarenessLookAndFeel");
 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(new NimbusLookAndFeel());
-				} catch (Exception e) {
-				}
-				TestCommandButtons frame = new TestCommandButtons();
-				frame.setSize(800, 400);
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			}
-		});
-	}
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    UIManager.setLookAndFeel(new NimbusLookAndFeel());
+                } catch (Exception e) {
+                }
+                TestCommandButtons frame = new TestCommandButtons();
+                frame.setSize(800, 400);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            }
+        });
+    }
 }

@@ -195,7 +195,7 @@ public class SvgFileViewPanel extends JPanel {
 												.getSvgBytes()), svgClassName);
 
 								transcoder.setPrintWriter(pw);
-								transcoder.transcode();
+								transcoder.transcode(this.getClass().getResourceAsStream("SvgTranscoderTemplateResizable.templ"));
 								JOptionPane
 										.showMessageDialog(
 												SwingUtilities
