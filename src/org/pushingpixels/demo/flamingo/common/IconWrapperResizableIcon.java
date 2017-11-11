@@ -41,6 +41,9 @@ public class IconWrapperResizableIcon implements ResizableIcon {
 	protected Icon delegate;
 
 	public IconWrapperResizableIcon(Icon delegate) {
+	    if (delegate == null) {
+	        throw new IllegalArgumentException("Cannot pass null delegate");
+	    }
 		this.delegate = delegate;
 	}
 

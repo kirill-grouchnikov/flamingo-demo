@@ -109,7 +109,7 @@ public class DisplayFile {
 		 * You may also skip this point - anonymous access will be used.
 		 */
 		ISVNAuthenticationManager authManager = SVNWCUtil
-				.createDefaultAuthenticationManager(name, password);
+				.createDefaultAuthenticationManager(name, password.toCharArray());
 		repository.setAuthenticationManager(authManager);
 
 		/*

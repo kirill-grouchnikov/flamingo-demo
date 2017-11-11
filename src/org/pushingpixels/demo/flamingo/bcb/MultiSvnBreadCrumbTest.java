@@ -47,11 +47,11 @@ import org.pushingpixels.demo.flamingo.MessageListDialog;
 import org.pushingpixels.demo.flamingo.common.ExplorerFileViewPanel;
 import org.pushingpixels.flamingo.api.bcb.BreadcrumbItem;
 import org.pushingpixels.flamingo.api.bcb.BreadcrumbPathEvent;
-import org.pushingpixels.flamingo.api.bcb.core.BreadcrumbMultiSvnSelector;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
+import org.pushingpixels.spoonbill.svn.BreadcrumbMultiSvnSelector;
 
 public class MultiSvnBreadCrumbTest extends JFrame {
 	private ExplorerFileViewPanel<String> filePanel;
@@ -84,13 +84,13 @@ public class MultiSvnBreadCrumbTest extends JFrame {
 		this.bar = new BreadcrumbMultiSvnSelector(
 				new BreadcrumbMultiSvnSelector.SvnRepositoryInfo("SVNKit",
 						"http://svn.svnkit.com/repos/svnkit", "anonymous",
-						"anonymous"),
+						"anonymous".toCharArray()),
 				new BreadcrumbMultiSvnSelector.SvnRepositoryInfo("KDE",
 						"svn://anonsvn.kde.org/home/kde/trunk", "anonymous",
-						"anonymous"),
+						"anonymous".toCharArray()),
 				new BreadcrumbMultiSvnSelector.SvnRepositoryInfo("Apache",
 						"http://svn.apache.org/repos/asf", "anonymous",
-						"anonymous"));
+						"anonymous".toCharArray()));
 		this.bar.setThrowsExceptions(true);
 		this.bar.addExceptionHandler((Throwable t) ->
 				MessageListDialog.showMessageDialog(

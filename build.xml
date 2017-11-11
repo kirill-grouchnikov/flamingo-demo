@@ -51,11 +51,16 @@
 	<property name="flamingo-demo.drop.dir" value="${module.flamingo-demo.basedir}/drop" />
 	<property name="flamingo-demo.src.dir" value="${module.flamingo-demo.basedir}/src/" />
 
-	<property name="flamingo.basedir" value="${module.flamingo-demo.basedir}/../flamingo" />
+    <property name="flamingo.basedir" value="${module.flamingo-demo.basedir}/../flamingo" />
+    <property name="ibis.basedir" value="${module.flamingo-demo.basedir}/../ibis" />
+    <property name="spoonbill.basedir" value="${module.flamingo-demo.basedir}/../spoonbill" />
+    <property name="trident.basedir" value="${module.flamingo-demo.basedir}/../trident" />
 
 	<property name="flamingo.version" value="6.0.00-dev" />
 	<property name="flamingo.versionKey" value="6.0.00dev Liadan" />
-	<property name="trident.version" value="1.4" />
+	<property name="trident.version" value="1.5.00-dev" />
+    <property name="ibis.version" value="1.0.00-dev" />
+    <property name="spoonbill.version" value="1.0.00-dev" />
 
 	<path id="flamingo-demo.module.bootclasspath">
 		<!-- Paths to be included in compilation bootclasspath -->
@@ -66,9 +71,11 @@
 
 	<path id="flamingo-demo.module.classpath">
 		<path refid="${module.jdk.classpath.flamingo-demo}" />
-		<pathelement location="${flamingo.basedir}/drop/${flamingo.version}/flamingo-${flamingo.version}.jar" />
-		<pathelement location="${flamingo.basedir}/lib/batik-all-1.9.jar" />
-        <pathelement location="${flamingo.basedir}/lib/svnkit.jar" />
+        <pathelement location="${flamingo.basedir}/drop/${flamingo.version}/flamingo-${flamingo.version}.jar" />
+        <pathelement location="${ibis.basedir}/drop/${ibis.version}/ibis-${ibis.version}.jar" />
+        <pathelement location="${spoonbill.basedir}/drop/${spoonbill.version}/spoonbill-${spoonbill.version}.jar" />
+		<pathelement location="${ibis.basedir}/lib/batik-all-1.9.jar" />
+        <pathelement location="${spoonbill.basedir}/lib/svnkit-1.9.0.jar" />
         <pathelement location="${module.flamingo-demo.basedir}/lib/forms-1.2.0.jar" />
 	</path>
 

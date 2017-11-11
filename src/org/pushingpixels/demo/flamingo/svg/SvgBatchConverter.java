@@ -7,8 +7,8 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.concurrent.CountDownLatch;
 
-import org.pushingpixels.flamingo.api.svg.SvgTranscoder;
-import org.pushingpixels.flamingo.api.svg.TranscoderListener;
+import org.pushingpixels.ibis.SvgTranscoder;
+import org.pushingpixels.ibis.TranscoderListener;
 
 public class SvgBatchConverter {
     /**
@@ -57,6 +57,8 @@ public class SvgBatchConverter {
                         latch.countDown();
                     }
                 });
+//                InputStream templateStream = SvgTranscoder.class.getResourceAsStream(
+//                        "SvgTranscoderTemplateResizable.templ");
                 InputStream templateStream = SvgBatchConverter.class.getResourceAsStream(
                         "SvgTranscoderTemplateSubstance.templ");
                 transcoder.transcode(templateStream);

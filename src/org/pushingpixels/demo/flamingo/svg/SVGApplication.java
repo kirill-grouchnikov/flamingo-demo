@@ -51,8 +51,8 @@ import org.apache.batik.swing.svg.GVTTreeBuilderAdapter;
 import org.apache.batik.swing.svg.GVTTreeBuilderEvent;
 import org.apache.batik.swing.svg.SVGDocumentLoaderAdapter;
 import org.apache.batik.swing.svg.SVGDocumentLoaderEvent;
-import org.pushingpixels.flamingo.api.svg.SvgTranscoder;
-import org.pushingpixels.flamingo.api.svg.TranscoderListener;
+import org.pushingpixels.ibis.SvgTranscoder;
+import org.pushingpixels.ibis.TranscoderListener;
 
 public class SVGApplication {
 

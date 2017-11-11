@@ -56,8 +56,8 @@ import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.flamingo.api.svg.SvgBatikResizableIcon;
-import org.pushingpixels.flamingo.api.svg.SvgStreamTranscoder;
+import org.pushingpixels.ibis.SvgBatikResizableIcon;
+import org.pushingpixels.ibis.SvgStreamTranscoder;
 
 /**
  * Panel that hosts SVG-based gallery buttons.
