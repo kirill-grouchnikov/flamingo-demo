@@ -43,10 +43,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.pushingpixels.demo.flamingo.svg.transcoded.Edit_copy;
-import org.pushingpixels.demo.flamingo.svg.transcoded.Edit_cut;
-import org.pushingpixels.demo.flamingo.svg.transcoded.Edit_paste;
-import org.pushingpixels.demo.flamingo.svg.transcoded.Edit_select_all;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Edit_copy;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Edit_cut;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Edit_paste;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Edit_select_all;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.icon.FilteredResizableIcon;

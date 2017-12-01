@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.pushingpixels.demo.flamingo.ribbon.help_browser;
-import org.pushingpixels.demo.flamingo.svg.transcoded.Address_book_new;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Address_book_new;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.internal.ui.common.JRichTooltipPanel;
 

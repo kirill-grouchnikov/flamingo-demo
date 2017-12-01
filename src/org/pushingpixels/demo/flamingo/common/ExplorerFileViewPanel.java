@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2007 Flamingo Kirill Grouchnikov. 
+ * Copyright (c) 2005-2017 Flamingo Kirill Grouchnikov. 
  * All Rights Reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,9 +33,8 @@ package org.pushingpixels.demo.flamingo.common;
 
 import java.awt.Dimension;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,13 +56,11 @@ import org.pushingpixels.ibis.SvgBatikResizableIcon;
  * Panel that hosts image-based buttons.
  * 
  * @author Kirill Grouchnikov
- * @param <
- *            T> Type tag.
+ * @param <T>
+ *            Type tag.
  */
 public class ExplorerFileViewPanel<T> extends AbstractFileViewPanel<T> {
     protected JBreadcrumbBar<T> bar;
-
-    // protected static Map<String, String> extensionMapping;
 
     protected static Map<String, ResizableIcon> iconMapping = new HashMap<String, ResizableIcon>();
 
@@ -174,29 +171,18 @@ public class ExplorerFileViewPanel<T> extends AbstractFileViewPanel<T> {
             return IcoWrapperResizableIcon.getIcon(stream, dimension);
         }
 
-        if (true)
-            return null;
-
         ResizableIcon icon = iconMapping.get(ext);
         if (icon == null) {
             try {
-                File iconFile = new File(
-                        "C:/jtools/icons/File Icons Vs3/" + ext.toUpperCase() + ".ico");
-                if (iconFile.exists()) {
-                    icon = IcoWrapperResizableIcon.getIcon(new FileInputStream(iconFile),
-                            dimension);
-                } else {
-                    if (defaultIcon == null) {
-                        defaultIcon = IcoWrapperResizableIcon.getIcon(
-                                new FileInputStream(
-                                        new File("C:/jtools/icons/File Icons Vs3/Default.ico")),
-                                dimension);
-                    }
-                    return defaultIcon;
+                String className = "org.pushingpixels.demo.flamingo.svg.filetypes.transcoded.ext_"
+                        + ext;
+                Class transcodedClass = Class.forName(className);
+                if (transcodedClass != null) {
+                    Method of = transcodedClass.getDeclaredMethod("of", int.class, int.class);
+                    icon = (ResizableIcon) of.invoke(null, prefSize, prefSize);
+                    iconMapping.put(ext, icon);
                 }
-                iconMapping.put(ext, icon);
-            } catch (FileNotFoundException fnfe) {
-                fnfe.printStackTrace();
+            } catch (Throwable t) {
             }
         }
         return icon;

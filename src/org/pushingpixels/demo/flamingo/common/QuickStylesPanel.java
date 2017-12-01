@@ -13,7 +13,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.pushingpixels.demo.flamingo.svg.transcoded.Font_x_generic;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Font_x_generic;
 import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.DecoratedResizableIcon;

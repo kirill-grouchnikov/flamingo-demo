@@ -40,8 +40,8 @@ import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.pushingpixels.demo.flamingo.ribbon.help_browser;
-import org.pushingpixels.demo.flamingo.svg.transcoded.Address_book_new;
-import org.pushingpixels.demo.flamingo.svg.transcoded.Help_browser;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Address_book_new;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Help_browser;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 

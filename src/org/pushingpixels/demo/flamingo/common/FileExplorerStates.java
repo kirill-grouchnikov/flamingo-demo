@@ -82,8 +82,6 @@ public class FileExplorerStates extends JFrame {
 						protected void done() {
 							try {
 								filePanel.setFolder(get());
-								// fileList
-								// .setIconDimension(currIconSize);
 							} catch (Exception exc) {
 							}
 						}
