@@ -38,7 +38,6 @@ import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
@@ -131,42 +130,40 @@ public class SVGApplication {
         panel.add("Center", svgCanvas);
 
         // Set the button action.
-        button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                JFileChooser fc = new JFileChooser(lastDir);
-                int choice = fc.showOpenDialog(panel);
-                if (choice == JFileChooser.APPROVE_OPTION) {
-                    File f = fc.getSelectedFile();
-                    lastDir = f.getParent();
-                    try {
-                        String svgClassName = f.getName().substring(0, f.getName().length() - 4);
-                        svgClassName = svgClassName.replace('-', '_');
-                        svgClassName = svgClassName.replace(' ', '_');
+        button.addActionListener((ActionEvent e) -> {
+            JFileChooser fc = new JFileChooser(lastDir);
+            int choice = fc.showOpenDialog(panel);
+            if (choice == JFileChooser.APPROVE_OPTION) {
+                File f = fc.getSelectedFile();
+                lastDir = f.getParent();
+                try {
+                    String svgClassName = f.getName().substring(0, f.getName().length() - 4);
+                    svgClassName = svgClassName.replace('-', '_');
+                    svgClassName = svgClassName.replace(' ', '_');
 
-                        svgCanvas.setURI(f.toURI().toURL().toString());
+                    svgCanvas.setURI(f.toURI().toURL().toString());
 
-                        String javaClassFilename = f.getParent() + File.separator + svgClassName
-                                + ".java";
+                    String javaClassFilename = f.getParent() + File.separator + svgClassName
+                            + ".java";
 
-                        final PrintWriter pw = new PrintWriter(javaClassFilename);
+                    final PrintWriter pw = new PrintWriter(javaClassFilename);
 
-                        SvgTranscoder transcoder = new SvgTranscoder(f.toURI().toURL().toString(),
-                                svgClassName);
-                        transcoder.setListener(new TranscoderListener() {
-                            public Writer getWriter() {
-                                return pw;
-                            }
+                    SvgTranscoder transcoder = new SvgTranscoder(f.toURI().toURL().toString(),
+                            svgClassName);
+                    transcoder.setListener(new TranscoderListener() {
+                        public Writer getWriter() {
+                            return pw;
+                        }
 
-                            public void finished() {
-                                JOptionPane.showMessageDialog(null, "Finished");
-                            }
-                        });
-                        transcoder.transcode(this.getClass()
-                                .getResourceAsStream("SvgTranscoderTemplateResizable.templ"));
+                        public void finished() {
+                            JOptionPane.showMessageDialog(null, "Finished");
+                        }
+                    });
+                    transcoder.transcode(this.getClass()
+                            .getResourceAsStream("SvgTranscoderTemplateResizable.templ"));
 
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
         });

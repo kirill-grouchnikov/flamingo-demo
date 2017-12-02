@@ -37,7 +37,6 @@ import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.text.MessageFormat;
@@ -73,6 +72,7 @@ import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class TestCommandButtons extends JFrame {
@@ -115,9 +115,7 @@ public class TestCommandButtons extends JFrame {
     protected JPanel getButtonPanel() {
         FormLayout lm = new FormLayout("right:pref, 10dlu, center:pref, 4dlu,"
                 + "center:pref, 4dlu, center:pref, " + "4dlu, center:pref", "");
-        // lm.setColumnGroups(new int[][] { { 3, 5, 7, 9 } });
-        DefaultFormBuilder builder = new DefaultFormBuilder(lm);
-        builder.setDefaultDialogBorder();
+        DefaultFormBuilder builder = new DefaultFormBuilder(lm).border(Borders.DIALOG);
 
         builder.append("");
         builder.append("Action only");
@@ -167,12 +165,8 @@ public class TestCommandButtons extends JFrame {
                 for (int i = 0; i < 20; i++) {
                     final JCommandMenuButton smb = new JCommandMenuButton(
                             mf.format(new Object[] { i }), new Text_x_generic());
-                    smb.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            System.out.println("Invoked action on '" + smb.getText() + "'");
-                        }
-                    });
+                    smb.addActionListener((ActionEvent e) -> System.out
+                            .println("Invoked action on '" + smb.getText() + "'"));
                     scrollableMenu.addMenuButton(smb);
                 }
                 scrollableMenu.setMaxVisibleMenuButtons(8);
@@ -231,11 +225,7 @@ public class TestCommandButtons extends JFrame {
                 .setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
         copyButton.setDisplayState(state);
         copyButton.setFlat(false);
-        copyButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(stamp() + ": Copy");
-            }
-        });
+        copyButton.addActionListener((ActionEvent e) -> System.out.println(stamp() + ": Copy"));
         return copyButton;
     }
 
@@ -248,11 +238,7 @@ public class TestCommandButtons extends JFrame {
                 JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
         cutButton.setDisplayState(state);
         cutButton.setFlat(false);
-        cutButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(stamp() + ": Cut");
-            }
-        });
+        cutButton.addActionListener((ActionEvent e) -> System.out.println(stamp() + ": Cut"));
         return cutButton;
     }
 
@@ -262,11 +248,8 @@ public class TestCommandButtons extends JFrame {
         mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
                 new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null)));
         mainButton.setExtraText(resourceBundle.getString("Paste.textExtra"));
-        mainButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(stamp() + ": Main paste");
-            }
-        });
+        mainButton
+                .addActionListener((ActionEvent e) -> System.out.println(stamp() + ": Main paste"));
         mainButton.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_ONLY);
         mainButton.setDisplayState(state);
         mainButton.setFlat(false);
@@ -278,36 +261,29 @@ public class TestCommandButtons extends JFrame {
 
         final JCheckBox enabled = new JCheckBox("enabled");
         enabled.setSelected(true);
-        enabled.addActionListener(new ActionListener() {
+        enabled.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        scan(TestCommandButtons.this);
-                        repaint();
-                    }
-
-                    private void scan(Container c) {
-                        for (int i = 0; i < c.getComponentCount(); i++) {
-                            Component child = c.getComponent(i);
-                            if (child instanceof AbstractCommandButton)
-                                child.setEnabled(enabled.isSelected());
-                            if (child instanceof Container)
-                                scan((Container) child);
-                        }
-                    }
-                });
+            public void run() {
+                scan(TestCommandButtons.this);
+                repaint();
             }
-        });
+
+            private void scan(Container c) {
+                for (int i = 0; i < c.getComponentCount(); i++) {
+                    Component child = c.getComponent(i);
+                    if (child instanceof AbstractCommandButton)
+                        child.setEnabled(enabled.isSelected());
+                    if (child instanceof Container)
+                        scan((Container) child);
+                }
+            }
+        }));
         controlPanel.add(enabled);
 
         final JCheckBox actionEnabled = new JCheckBox("action enabled");
         actionEnabled.setSelected(true);
-        actionEnabled.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
+        actionEnabled
+                .addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         scan(TestCommandButtons.this);
@@ -324,17 +300,13 @@ public class TestCommandButtons extends JFrame {
                                 scan((Container) child);
                         }
                     }
-                });
-            }
-        });
+                }));
         controlPanel.add(actionEnabled);
 
         final JCheckBox popupEnabled = new JCheckBox("popup enabled");
         popupEnabled.setSelected(true);
-        popupEnabled.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
+        popupEnabled
+                .addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         scan(TestCommandButtons.this);
@@ -351,63 +323,50 @@ public class TestCommandButtons extends JFrame {
                                 scan((Container) child);
                         }
                     }
-                });
-            }
-        });
+                }));
         controlPanel.add(popupEnabled);
 
         final JCheckBox flat = new JCheckBox("flat");
-        flat.addActionListener(new ActionListener() {
+        flat.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        scan(TestCommandButtons.this);
-                        repaint();
-                    }
-
-                    private void scan(Container c) {
-                        for (int i = 0; i < c.getComponentCount(); i++) {
-                            Component child = c.getComponent(i);
-                            if (child instanceof AbstractCommandButton)
-                                ((AbstractCommandButton) child).setFlat(flat.isSelected());
-                            if (child instanceof Container)
-                                scan((Container) child);
-                        }
-                    }
-                });
+            public void run() {
+                scan(TestCommandButtons.this);
+                repaint();
             }
-        });
+
+            private void scan(Container c) {
+                for (int i = 0; i < c.getComponentCount(); i++) {
+                    Component child = c.getComponent(i);
+                    if (child instanceof AbstractCommandButton)
+                        ((AbstractCommandButton) child).setFlat(flat.isSelected());
+                    if (child instanceof Container)
+                        scan((Container) child);
+                }
+            }
+        }));
         controlPanel.add(flat);
 
         final JCheckBox downward = new JCheckBox("downward");
         downward.setSelected(true);
-        downward.addActionListener(new ActionListener() {
+        downward.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        scan(TestCommandButtons.this);
-                        repaint();
-                    }
-
-                    private void scan(Container c) {
-                        for (int i = 0; i < c.getComponentCount(); i++) {
-                            Component child = c.getComponent(i);
-                            if (child instanceof JCommandButton)
-                                ((JCommandButton) child)
-                                        .setPopupOrientationKind(downward.isSelected()
-                                                ? CommandButtonPopupOrientationKind.DOWNWARD
-                                                : CommandButtonPopupOrientationKind.SIDEWARD);
-                            if (child instanceof Container)
-                                scan((Container) child);
-                        }
-                    }
-                });
+            public void run() {
+                scan(TestCommandButtons.this);
+                repaint();
             }
-        });
+
+            private void scan(Container c) {
+                for (int i = 0; i < c.getComponentCount(); i++) {
+                    Component child = c.getComponent(i);
+                    if (child instanceof JCommandButton)
+                        ((JCommandButton) child).setPopupOrientationKind(
+                                downward.isSelected() ? CommandButtonPopupOrientationKind.DOWNWARD
+                                        : CommandButtonPopupOrientationKind.SIDEWARD);
+                    if (child instanceof Container)
+                        scan((Container) child);
+                }
+            }
+        }));
         controlPanel.add(downward);
 
         popupCombo = new JComboBox(PopupKind.values());
@@ -477,18 +436,16 @@ public class TestCommandButtons extends JFrame {
         UIManager.installLookAndFeel("Pagosoft", "com.pagosoft.plaf.PgsLookAndFeel");
         UIManager.installLookAndFeel("Squareness", "net.beeger.squareness.SquarenessLookAndFeel");
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    UIManager.setLookAndFeel(new NimbusLookAndFeel());
-                } catch (Exception e) {
-                }
-                TestCommandButtons frame = new TestCommandButtons();
-                frame.setSize(800, 400);
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new NimbusLookAndFeel());
+            } catch (Exception e) {
             }
+            TestCommandButtons frame = new TestCommandButtons();
+            frame.setSize(800, 400);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         });
     }
 }

@@ -39,7 +39,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.pushingpixels.demo.flamingo.ribbon.help_browser;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Address_book_new;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Help_browser;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
@@ -47,76 +46,72 @@ import org.pushingpixels.flamingo.api.common.RichTooltip;
 
 public class TestCommandButtonsRichTooltips extends TestCommandButtons {
 
-	@Override
-	protected JPanel getButtonPanel() {
-		JPanel result = super.getButtonPanel();
-		apply(result, new Command() {
-			public void apply(JCommandButton button) {
-				RichTooltip actionRichTooltip = new RichTooltip();
-				actionRichTooltip.setTitle(resourceBundle
-						.getString("Tooltip.textActionTitle"));
-				actionRichTooltip.addDescriptionSection(resourceBundle
-						.getString("Tooltip.textParagraph1"));
-				actionRichTooltip.addDescriptionSection(resourceBundle
-						.getString("Tooltip.textParagraph2"));
-				actionRichTooltip.setMainImage(new Address_book_new(), new Dimension(32, 32));
-				actionRichTooltip.setFooterIcon(new Help_browser());
-				actionRichTooltip.addFooterSection(resourceBundle
-						.getString("Tooltip.textFooterParagraph1"));
+    @Override
+    protected JPanel getButtonPanel() {
+        JPanel result = super.getButtonPanel();
+        apply(result, new Command() {
+            public void apply(JCommandButton button) {
+                RichTooltip actionRichTooltip = new RichTooltip();
+                actionRichTooltip.setTitle(resourceBundle.getString("Tooltip.textActionTitle"));
+                actionRichTooltip
+                        .addDescriptionSection(resourceBundle.getString("Tooltip.textParagraph1"));
+                actionRichTooltip
+                        .addDescriptionSection(resourceBundle.getString("Tooltip.textParagraph2"));
+                actionRichTooltip.setMainImage(new Address_book_new(), new Dimension(32, 32));
+                actionRichTooltip.setFooterIcon(Help_browser.of(32, 32));
+                actionRichTooltip
+                        .addFooterSection(resourceBundle.getString("Tooltip.textFooterParagraph1"));
 
-				button.setActionRichTooltip(actionRichTooltip);
+                button.setActionRichTooltip(actionRichTooltip);
 
-				RichTooltip popupRichTooltip = new RichTooltip();
-				popupRichTooltip.setTitle(resourceBundle
-						.getString("Tooltip.textPopupTitle"));
-				popupRichTooltip.addDescriptionSection(resourceBundle
-						.getString("Tooltip.textParagraph1"));
-				popupRichTooltip.setFooterIcon(new help_browser());
-				popupRichTooltip.addFooterSection(resourceBundle
-						.getString("Tooltip.textFooterParagraph1"));
+                RichTooltip popupRichTooltip = new RichTooltip();
+                popupRichTooltip.setTitle(resourceBundle.getString("Tooltip.textPopupTitle"));
+                popupRichTooltip
+                        .addDescriptionSection(resourceBundle.getString("Tooltip.textParagraph1"));
+                popupRichTooltip.setFooterIcon(Help_browser.of(32, 32));
+                popupRichTooltip
+                        .addFooterSection(resourceBundle.getString("Tooltip.textFooterParagraph1"));
 
-				button.setPopupRichTooltip(popupRichTooltip);
-			};
-		});
-		return result;
-	}
+                button.setPopupRichTooltip(popupRichTooltip);
+            };
+        });
+        return result;
+    }
 
-	private static interface Command {
-		void apply(JCommandButton button);
-	}
+    private static interface Command {
+        void apply(JCommandButton button);
+    }
 
-	private static void apply(Container cont, Command cmd) {
-		for (int i = 0; i < cont.getComponentCount(); i++) {
-			Component comp = cont.getComponent(i);
-			if (comp instanceof JCommandButton) {
-				JCommandButton cb = (JCommandButton) comp;
-				cmd.apply(cb);
-			}
-			if (comp instanceof Container) {
-				apply((Container) comp, cmd);
-			}
-		}
-	}
+    private static void apply(Container cont, Command cmd) {
+        for (int i = 0; i < cont.getComponentCount(); i++) {
+            Component comp = cont.getComponent(i);
+            if (comp instanceof JCommandButton) {
+                JCommandButton cb = (JCommandButton) comp;
+                cmd.apply(cb);
+            }
+            if (comp instanceof Container) {
+                apply((Container) comp, cmd);
+            }
+        }
+    }
 
-	/**
-	 * Main method for testing.
-	 * 
-	 * @param args
-	 *            Ignored.
-	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(new MetalLookAndFeel());
-				} catch (Exception e) {
-				}
-				TestCommandButtonsRichTooltips frame = new TestCommandButtonsRichTooltips();
-				frame.setSize(800, 400);
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			}
-		});
-	}
+    /**
+     * Main method for testing.
+     * 
+     * @param args
+     *            Ignored.
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new MetalLookAndFeel());
+            } catch (Exception e) {
+            }
+            TestCommandButtonsRichTooltips frame = new TestCommandButtonsRichTooltips();
+            frame.setSize(800, 400);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        });
+    }
 }

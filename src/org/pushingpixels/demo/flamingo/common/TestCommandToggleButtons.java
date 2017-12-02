@@ -37,7 +37,6 @@ import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.text.SimpleDateFormat;
@@ -60,286 +59,245 @@ import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.FilteredResizableIcon;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
-
 public class TestCommandToggleButtons extends JFrame {
-	protected ResourceBundle resourceBundle;
+    protected ResourceBundle resourceBundle;
 
-	protected Locale currLocale;
+    protected Locale currLocale;
 
-	private JPanel buttonPanel;
+    private JPanel buttonPanel;
 
-	public TestCommandToggleButtons() {
-		super("Command button test");
-		this.setIconImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+    public TestCommandToggleButtons() {
+        super("Command button test");
+        this.setIconImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
 
-		this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
-		currLocale = Locale.getDefault();
-		resourceBundle = ResourceBundle.getBundle("test.resource.Resources",
-				currLocale);
+        currLocale = Locale.getDefault();
+        resourceBundle = ResourceBundle.getBundle("test.resource.Resources", currLocale);
 
-		buttonPanel = getButtonPanel();
-		this.add(buttonPanel, BorderLayout.CENTER);
+        buttonPanel = getButtonPanel();
+        this.add(buttonPanel, BorderLayout.CENTER);
 
-		JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		this.configureControlPanel(controlPanel);
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        this.configureControlPanel(controlPanel);
 
-		this.add(controlPanel, BorderLayout.SOUTH);
-	}
+        this.add(controlPanel, BorderLayout.SOUTH);
+    }
 
-	private JPanel getButtonPanel() {
-		FormLayout lm = new FormLayout(
-				"right:pref, 10dlu, center:pref, 4dlu, center:pref", "");
-		DefaultFormBuilder builder = new DefaultFormBuilder(lm);
-		builder.setDefaultDialogBorder();
+    private JPanel getButtonPanel() {
+        FormLayout lm = new FormLayout("right:pref, 10dlu, center:pref, 4dlu, center:pref", "");
+        DefaultFormBuilder builder = new DefaultFormBuilder(lm).border(Borders.DIALOG);
 
-		builder.append("");
-		builder.append("Short text");
-		builder.append("Long text");
+        builder.append("");
+        builder.append("Short text");
+        builder.append("Long text");
 
-		addButtons(builder, CommandButtonDisplayState.BIG);
-		addButtons(builder, CommandButtonDisplayState.TILE);
-		addButtons(builder, CommandButtonDisplayState.MEDIUM);
-		addButtons(builder, CommandButtonDisplayState.SMALL);
+        addButtons(builder, CommandButtonDisplayState.BIG);
+        addButtons(builder, CommandButtonDisplayState.TILE);
+        addButtons(builder, CommandButtonDisplayState.MEDIUM);
+        addButtons(builder, CommandButtonDisplayState.SMALL);
 
-		JPanel buttonsPanel = builder.getPanel();
-		return buttonsPanel;
-	}
+        JPanel buttonsPanel = builder.getPanel();
+        return buttonsPanel;
+    }
 
-	protected static String stamp() {
-		return new SimpleDateFormat("HH:mm:ss.SSS").format(new Date());
-	}
+    protected static String stamp() {
+        return new SimpleDateFormat("HH:mm:ss.SSS").format(new Date());
+    }
 
-	private void addButtons(DefaultFormBuilder builder,
-			CommandButtonDisplayState state) {
-		builder.append(state.getDisplayName() + " state");
+    private void addButtons(DefaultFormBuilder builder, CommandButtonDisplayState state) {
+        builder.append(state.getDisplayName() + " state");
 
-		JCommandToggleButton buttonWithShortText = createToggleButton(state,
-				resourceBundle.getString("Short.text"));
-		builder.append(buttonWithShortText);
-		JCommandToggleButton buttonWithLongText = createToggleButton(state,
-				resourceBundle.getString("LongerLines.text"));
-		builder.append(buttonWithLongText);
-	}
+        JCommandToggleButton buttonWithShortText = createToggleButton(state,
+                resourceBundle.getString("Short.text"));
+        builder.append(buttonWithShortText);
+        JCommandToggleButton buttonWithLongText = createToggleButton(state,
+                resourceBundle.getString("LongerLines.text"));
+        builder.append(buttonWithLongText);
+    }
 
-	protected JCommandToggleButton createToggleButton(
-			CommandButtonDisplayState state, String title) {
-		final JCommandToggleButton mainButton = new JCommandToggleButton(title,
-				new Edit_paste());
-		mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
-				new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
-						null)));
-		mainButton
-				.setExtraText(resourceBundle.getString("SelectAll.textExtra"));
-		mainButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(stamp()
-						+ ": button activated, selection state is "
-						+ mainButton.getActionModel().isSelected());
-			}
-		});
-		mainButton.setDisplayState(state);
-		mainButton.setFlat(false);
-		return mainButton;
-	}
+    protected JCommandToggleButton createToggleButton(CommandButtonDisplayState state,
+            String title) {
+        final JCommandToggleButton mainButton = new JCommandToggleButton(title, new Edit_paste());
+        mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
+                new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null)));
+        mainButton.setExtraText(resourceBundle.getString("SelectAll.textExtra"));
+        mainButton.addActionListener((ActionEvent e) -> System.out
+                .println(stamp() + ": button activated, selection state is "
+                        + mainButton.getActionModel().isSelected()));
+        mainButton.setDisplayState(state);
+        mainButton.setFlat(false);
+        return mainButton;
+    }
 
-	protected void configureControlPanel(JPanel controlPanel) {
-		controlPanel.add(LookAndFeelSwitcher.getLookAndFeelSwitcher(this));
+    protected void configureControlPanel(JPanel controlPanel) {
+        controlPanel.add(LookAndFeelSwitcher.getLookAndFeelSwitcher(this));
 
-		final JCheckBox enabled = new JCheckBox("enabled");
-		enabled.setSelected(true);
-		enabled.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						scan(TestCommandToggleButtons.this);
-						repaint();
-					}
+        final JCheckBox enabled = new JCheckBox("enabled");
+        enabled.setSelected(true);
+        enabled.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                scan(TestCommandToggleButtons.this);
+                repaint();
+            }
 
-					private void scan(Container c) {
-						for (int i = 0; i < c.getComponentCount(); i++) {
-							Component child = c.getComponent(i);
-							if (child instanceof JCommandToggleButton)
-								child.setEnabled(enabled.isSelected());
-							if (child instanceof Container)
-								scan((Container) child);
-						}
-					}
-				});
-			}
-		});
-		controlPanel.add(enabled);
+            private void scan(Container c) {
+                for (int i = 0; i < c.getComponentCount(); i++) {
+                    Component child = c.getComponent(i);
+                    if (child instanceof JCommandToggleButton)
+                        child.setEnabled(enabled.isSelected());
+                    if (child instanceof Container)
+                        scan((Container) child);
+                }
+            }
+        }));
+        controlPanel.add(enabled);
 
-		final JCheckBox actionEnabled = new JCheckBox("action enabled");
-		actionEnabled.setSelected(true);
-		actionEnabled.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						scan(TestCommandToggleButtons.this);
-						repaint();
-					}
+        final JCheckBox actionEnabled = new JCheckBox("action enabled");
+        actionEnabled.setSelected(true);
+        actionEnabled
+                .addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        scan(TestCommandToggleButtons.this);
+                        repaint();
+                    }
 
-					private void scan(Container c) {
-						for (int i = 0; i < c.getComponentCount(); i++) {
-							Component child = c.getComponent(i);
-							if (child instanceof JCommandToggleButton)
-								((JCommandToggleButton) child).getActionModel()
-										.setEnabled(actionEnabled.isSelected());
-							if (child instanceof Container)
-								scan((Container) child);
-						}
-					}
-				});
-			}
-		});
-		controlPanel.add(actionEnabled);
+                    private void scan(Container c) {
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            Component child = c.getComponent(i);
+                            if (child instanceof JCommandToggleButton)
+                                ((JCommandToggleButton) child).getActionModel()
+                                        .setEnabled(actionEnabled.isSelected());
+                            if (child instanceof Container)
+                                scan((Container) child);
+                        }
+                    }
+                }));
+        controlPanel.add(actionEnabled);
 
-		final JCheckBox actionOnPress = new JCheckBox("action on press");
-		actionOnPress.setSelected(false);
-		actionOnPress.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						scan(TestCommandToggleButtons.this);
-						repaint();
-					}
+        final JCheckBox actionOnPress = new JCheckBox("action on press");
+        actionOnPress.setSelected(false);
+        actionOnPress
+                .addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        scan(TestCommandToggleButtons.this);
+                        repaint();
+                    }
 
-					private void scan(Container c) {
-						for (int i = 0; i < c.getComponentCount(); i++) {
-							Component child = c.getComponent(i);
-							if (child instanceof JCommandToggleButton)
-								((JCommandToggleButton) child).getActionModel()
-										.setFireActionOnPress(
-												actionOnPress.isSelected());
-							if (child instanceof Container)
-								scan((Container) child);
-						}
-					}
-				});
-			}
-		});
-		controlPanel.add(actionOnPress);
+                    private void scan(Container c) {
+                        for (int i = 0; i < c.getComponentCount(); i++) {
+                            Component child = c.getComponent(i);
+                            if (child instanceof JCommandToggleButton)
+                                ((JCommandToggleButton) child).getActionModel()
+                                        .setFireActionOnPress(actionOnPress.isSelected());
+                            if (child instanceof Container)
+                                scan((Container) child);
+                        }
+                    }
+                }));
+        controlPanel.add(actionOnPress);
 
-		final JCheckBox flat = new JCheckBox("flat");
-		flat.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						scan(TestCommandToggleButtons.this);
-						repaint();
-					}
+        final JCheckBox flat = new JCheckBox("flat");
+        flat.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                scan(TestCommandToggleButtons.this);
+                repaint();
+            }
 
-					private void scan(Container c) {
-						for (int i = 0; i < c.getComponentCount(); i++) {
-							Component child = c.getComponent(i);
-							if (child instanceof JCommandToggleButton)
-								((JCommandToggleButton) child).setFlat(flat
-										.isSelected());
-							if (child instanceof Container)
-								scan((Container) child);
-						}
-					}
-				});
-			}
-		});
-		controlPanel.add(flat);
+            private void scan(Container c) {
+                for (int i = 0; i < c.getComponentCount(); i++) {
+                    Component child = c.getComponent(i);
+                    if (child instanceof JCommandToggleButton)
+                        ((JCommandToggleButton) child).setFlat(flat.isSelected());
+                    if (child instanceof Container)
+                        scan((Container) child);
+                }
+            }
+        }));
+        controlPanel.add(flat);
 
-		JComboBox localeSwitcher = LocaleSwitcher
-				.getLocaleSwitcher(new LocaleCallback() {
-					@Override
-					public void onLocaleSelected(Locale selected) {
-						currLocale = selected;
-						resourceBundle = ResourceBundle.getBundle(
-								"test.resource.Resources", currLocale);
-						remove(buttonPanel);
-						buttonPanel = getButtonPanel();
-						add(buttonPanel, BorderLayout.CENTER);
-						Window window = SwingUtilities
-								.getWindowAncestor(buttonPanel);
-						window.applyComponentOrientation(ComponentOrientation
-								.getOrientation(currLocale));
-						SwingUtilities.updateComponentTreeUI(window);
-					}
-				});
-		controlPanel.add(localeSwitcher);
-	}
+        JComboBox localeSwitcher = LocaleSwitcher.getLocaleSwitcher(new LocaleCallback() {
+            @Override
+            public void onLocaleSelected(Locale selected) {
+                currLocale = selected;
+                resourceBundle = ResourceBundle.getBundle("test.resource.Resources", currLocale);
+                remove(buttonPanel);
+                buttonPanel = getButtonPanel();
+                add(buttonPanel, BorderLayout.CENTER);
+                Window window = SwingUtilities.getWindowAncestor(buttonPanel);
+                window.applyComponentOrientation(ComponentOrientation.getOrientation(currLocale));
+                SwingUtilities.updateComponentTreeUI(window);
+            }
+        });
+        controlPanel.add(localeSwitcher);
+    }
 
-	/**
-	 * Main method for testing.
-	 * 
-	 * @param args
-	 *            Ignored.
-	 */
-	public static void main(String[] args) {
-		UIManager.installLookAndFeel("JGoodies Plastic",
-				"com.jgoodies.looks.plastic.PlasticLookAndFeel");
-		UIManager.installLookAndFeel("JGoodies PlasticXP",
-				"com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-		UIManager.installLookAndFeel("JGoodies Plastic3D",
-				"com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-		UIManager.installLookAndFeel("JGoodies Windows",
-				"com.jgoodies.looks.windows.WindowsLookAndFeel");
+    /**
+     * Main method for testing.
+     * 
+     * @param args
+     *            Ignored.
+     */
+    public static void main(String[] args) {
+        UIManager.installLookAndFeel("JGoodies Plastic",
+                "com.jgoodies.looks.plastic.PlasticLookAndFeel");
+        UIManager.installLookAndFeel("JGoodies PlasticXP",
+                "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+        UIManager.installLookAndFeel("JGoodies Plastic3D",
+                "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+        UIManager.installLookAndFeel("JGoodies Windows",
+                "com.jgoodies.looks.windows.WindowsLookAndFeel");
 
-		UIManager.installLookAndFeel("Synthetica base",
-				"de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlackMoon",
-				"de.javasoft.plaf.synthetica.SyntheticaBlackMoonLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlackStar",
-				"de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlueIce",
-				"de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlueMoon",
-				"de.javasoft.plaf.synthetica.SyntheticaBlueMoonLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica BlueSteel",
-				"de.javasoft.plaf.synthetica.SyntheticaBlueSteelLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica GreenDream",
-				"de.javasoft.plaf.synthetica.SyntheticaGreenDreamLookAndFeel");
-		UIManager
-				.installLookAndFeel("Synthetica MauveMetallic",
-						"de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel");
-		UIManager
-				.installLookAndFeel("Synthetica OrangeMetallic",
-						"de.javasoft.plaf.synthetica.SyntheticaOrangeMetallicLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica SkyMetallic",
-				"de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica SilverMoon",
-				"de.javasoft.plaf.synthetica.SyntheticaSilverMoonLookAndFeel");
-		UIManager.installLookAndFeel("Synthetica WhiteVision",
-				"de.javasoft.plaf.synthetica.SyntheticaWhiteVisionLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica base",
+                "de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlackMoon",
+                "de.javasoft.plaf.synthetica.SyntheticaBlackMoonLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlackStar",
+                "de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlueIce",
+                "de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlueMoon",
+                "de.javasoft.plaf.synthetica.SyntheticaBlueMoonLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica BlueSteel",
+                "de.javasoft.plaf.synthetica.SyntheticaBlueSteelLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica GreenDream",
+                "de.javasoft.plaf.synthetica.SyntheticaGreenDreamLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica MauveMetallic",
+                "de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica OrangeMetallic",
+                "de.javasoft.plaf.synthetica.SyntheticaOrangeMetallicLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica SkyMetallic",
+                "de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica SilverMoon",
+                "de.javasoft.plaf.synthetica.SyntheticaSilverMoonLookAndFeel");
+        UIManager.installLookAndFeel("Synthetica WhiteVision",
+                "de.javasoft.plaf.synthetica.SyntheticaWhiteVisionLookAndFeel");
 
-		UIManager.installLookAndFeel("A03", "a03.swing.plaf.A03LookAndFeel");
-		UIManager.installLookAndFeel("Liquid",
-				"com.birosoft.liquid.LiquidLookAndFeel");
-		UIManager.installLookAndFeel("Napkin",
-				"net.sourceforge.napkinlaf.NapkinLookAndFeel");
-		UIManager.installLookAndFeel("Pagosoft",
-				"com.pagosoft.plaf.PgsLookAndFeel");
-		UIManager.installLookAndFeel("Squareness",
-				"net.beeger.squareness.SquarenessLookAndFeel");
+        UIManager.installLookAndFeel("A03", "a03.swing.plaf.A03LookAndFeel");
+        UIManager.installLookAndFeel("Liquid", "com.birosoft.liquid.LiquidLookAndFeel");
+        UIManager.installLookAndFeel("Napkin", "net.sourceforge.napkinlaf.NapkinLookAndFeel");
+        UIManager.installLookAndFeel("Pagosoft", "com.pagosoft.plaf.PgsLookAndFeel");
+        UIManager.installLookAndFeel("Squareness", "net.beeger.squareness.SquarenessLookAndFeel");
 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(new MetalLookAndFeel());
-				} catch (Exception e) {
-				}
-				TestCommandToggleButtons frame = new TestCommandToggleButtons();
-				frame.setSize(800, 400);
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			}
-		});
-	}
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    UIManager.setLookAndFeel(new MetalLookAndFeel());
+                } catch (Exception e) {
+                }
+                TestCommandToggleButtons frame = new TestCommandToggleButtons();
+                frame.setSize(800, 400);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            }
+        });
+    }
 }

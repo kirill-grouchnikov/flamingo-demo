@@ -33,9 +33,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -146,19 +144,13 @@ public class SvnBreadCrumbTest extends JFrame {
                         cellHasFocus);
             }
         });
-        svnCombo.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        SvnRepoInfo selected = (SvnRepoInfo) svnCombo.getSelectedItem();
-                        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                        bar.setConnectionParams(selected.url, selected.user,
-                                selected.password.toCharArray(), true);
-                        setCursor(Cursor.getDefaultCursor());
-                    }
-                });
-            }
-        });
+        svnCombo.addItemListener((ItemEvent e) -> SwingUtilities.invokeLater(() -> {
+            SvnRepoInfo selected = (SvnRepoInfo) svnCombo.getSelectedItem();
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            bar.setConnectionParams(selected.url, selected.user, selected.password.toCharArray(),
+                    true);
+            setCursor(Cursor.getDefaultCursor());
+        }));
 
         // "http://svn.svnkit.com/repos/svnkit", "anonymous", "anonymous");
         this.bar.getModel()
@@ -221,58 +213,51 @@ public class SvnBreadCrumbTest extends JFrame {
                         process(e);
                     }
 
-                    protected void process(MouseEvent e) {
+                    protected void process(MouseEvent me) {
                         JPopupMenu popupMenu = new JPopupMenu();
                         JMenuItem showContents = new JMenuItem("Show file contents");
-                        showContents.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                                SwingUtilities.invokeLater(new Runnable() {
-                                    public void run() {
-                                        SwingWorker<InputStream, Void> worker = new SwingWorker<InputStream, Void>() {
-                                            @Override
-                                            protected InputStream doInBackground()
-                                                    throws Exception {
-                                                String leafName = button.getText();
-                                                BreadcrumbBarModel<String> model = bar.getModel();
-                                                String path = model
-                                                        .getItem(model.getItemCount() - 1)
-                                                        .getData();
-                                                return bar.getCallback()
-                                                        .getLeafContent(path + "/" + leafName);
-                                            }
+                        showContents.addActionListener(
+                                (ActionEvent ae) -> SwingUtilities.invokeLater(() -> {
+                                    SwingWorker<InputStream, Void> worker = new SwingWorker<InputStream, Void>() {
+                                        @Override
+                                        protected InputStream doInBackground() throws Exception {
+                                            String leafName = button.getText();
+                                            BreadcrumbBarModel<String> model = bar.getModel();
+                                            String path = model.getItem(model.getItemCount() - 1)
+                                                    .getData();
+                                            return bar.getCallback()
+                                                    .getLeafContent(path + "/" + leafName);
+                                        }
 
-                                            @Override
-                                            protected void done() {
-                                                try {
-                                                    InputStream is = get();
-                                                    BufferedReader reader = new BufferedReader(
-                                                            new InputStreamReader(is));
-                                                    JTextArea textArea = new JTextArea();
-                                                    while (true) {
-                                                        String line = reader.readLine();
-                                                        if (line == null)
-                                                            break;
-                                                        textArea.append(line + "\n");
-                                                    }
-                                                    textArea.setCaretPosition(0);
-                                                    JDialog contDialog = new JDialog(
-                                                            SvnBreadCrumbTest.this, false);
-                                                    contDialog.add(new JScrollPane(textArea),
-                                                            BorderLayout.CENTER);
-                                                    contDialog.setSize(500, 400);
-                                                    contDialog.setLocationRelativeTo(null);
-                                                    contDialog.setVisible(true);
-                                                } catch (Exception exc) {
+                                        @Override
+                                        protected void done() {
+                                            try {
+                                                InputStream is = get();
+                                                BufferedReader reader = new BufferedReader(
+                                                        new InputStreamReader(is));
+                                                JTextArea textArea = new JTextArea();
+                                                while (true) {
+                                                    String line = reader.readLine();
+                                                    if (line == null)
+                                                        break;
+                                                    textArea.append(line + "\n");
                                                 }
+                                                textArea.setCaretPosition(0);
+                                                JDialog contDialog = new JDialog(
+                                                        SvnBreadCrumbTest.this, false);
+                                                contDialog.add(new JScrollPane(textArea),
+                                                        BorderLayout.CENTER);
+                                                contDialog.setSize(500, 400);
+                                                contDialog.setLocationRelativeTo(null);
+                                                contDialog.setVisible(true);
+                                            } catch (Exception exc) {
                                             }
-                                        };
-                                        worker.execute();
-                                    }
-                                });
-                            }
-                        });
+                                        }
+                                    };
+                                    worker.execute();
+                                }));
                         popupMenu.add(showContents);
-                        popupMenu.show(button, e.getX(), e.getY());
+                        popupMenu.show(button, me.getX(), me.getY());
                     }
                 });
             }
@@ -293,14 +278,12 @@ public class SvnBreadCrumbTest extends JFrame {
             System.setProperty("java.net.useSystemProxies", "true");
         } catch (SecurityException e) {
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                SvnBreadCrumbTest test = new SvnBreadCrumbTest();
-                test.setSize(700, 400);
-                test.setLocation(300, 100);
-                test.setVisible(true);
-                test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            }
+        SwingUtilities.invokeLater(() -> {
+            SvnBreadCrumbTest test = new SvnBreadCrumbTest();
+            test.setSize(700, 400);
+            test.setLocation(300, 100);
+            test.setVisible(true);
+            test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         });
     }
 }

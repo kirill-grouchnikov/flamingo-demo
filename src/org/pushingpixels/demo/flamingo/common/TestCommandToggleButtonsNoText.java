@@ -33,7 +33,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.ColorConvertOp;
 
 import javax.swing.JCheckBox;
@@ -49,95 +48,71 @@ import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.FilteredResizableIcon;
 
 public class TestCommandToggleButtonsNoText extends TestCommandToggleButtons {
-	@Override
-	protected JCommandToggleButton createToggleButton(
-			CommandButtonDisplayState state, String title) {
-		JCommandToggleButton mainButton = new JCommandToggleButton(
-				new Edit_paste());
-		mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
-				new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),
-						null)));
-		mainButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(stamp() + ": Main selection");
-			}
-		});
-		mainButton.setDisplayState(state);
-		mainButton.setFlat(false);
-		return mainButton;
-	}
+    @Override
+    protected JCommandToggleButton createToggleButton(CommandButtonDisplayState state,
+            String title) {
+        JCommandToggleButton mainButton = new JCommandToggleButton(new Edit_paste());
+        mainButton.setDisabledIcon(new FilteredResizableIcon(new Edit_paste(),
+                new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null)));
+        mainButton.addActionListener(
+                (ActionEvent e) -> System.out.println(stamp() + ": Main selection"));
+        mainButton.setDisplayState(state);
+        mainButton.setFlat(false);
+        return mainButton;
+    }
 
-	@Override
-	protected void configureControlPanel(JPanel controlPanel) {
-		super.configureControlPanel(controlPanel);
-		final JCheckBox noText = new JCheckBox("no text");
-		noText.setSelected(true);
-		noText.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						apply(TestCommandToggleButtonsNoText.this,
-								new Command() {
-									public void apply(
-											JCommandToggleButton button) {
-										button
-												.setText(noText.isSelected() ? null
-														: "New caption");
-										button
-												.setExtraText(noText
-														.isSelected() ? null
-														: "New extra text");
-									};
-								});
-						TestCommandToggleButtonsNoText.this.getContentPane()
-								.invalidate();
-						TestCommandToggleButtonsNoText.this.getContentPane()
-								.validate();
-					}
-				});
-			}
-		});
-		controlPanel.add(noText);
-	}
+    @Override
+    protected void configureControlPanel(JPanel controlPanel) {
+        super.configureControlPanel(controlPanel);
+        final JCheckBox noText = new JCheckBox("no text");
+        noText.setSelected(true);
+        noText.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
+            apply(TestCommandToggleButtonsNoText.this, new Command() {
+                public void apply(JCommandToggleButton button) {
+                    button.setText(noText.isSelected() ? null : "New caption");
+                    button.setExtraText(noText.isSelected() ? null : "New extra text");
+                };
+            });
+            TestCommandToggleButtonsNoText.this.getContentPane().invalidate();
+            TestCommandToggleButtonsNoText.this.getContentPane().validate();
+        }));
+        controlPanel.add(noText);
+    }
 
-	private static interface Command {
-		void apply(JCommandToggleButton button);
-	}
+    private static interface Command {
+        void apply(JCommandToggleButton button);
+    }
 
-	private static void apply(Container cont, Command cmd) {
-		for (int i = 0; i < cont.getComponentCount(); i++) {
-			Component comp = cont.getComponent(i);
-			if (comp instanceof JCommandToggleButton) {
-				JCommandToggleButton cb = (JCommandToggleButton) comp;
-				cmd.apply(cb);
-			}
-			if (comp instanceof Container) {
-				apply((Container) comp, cmd);
-			}
-		}
-	}
+    private static void apply(Container cont, Command cmd) {
+        for (int i = 0; i < cont.getComponentCount(); i++) {
+            Component comp = cont.getComponent(i);
+            if (comp instanceof JCommandToggleButton) {
+                JCommandToggleButton cb = (JCommandToggleButton) comp;
+                cmd.apply(cb);
+            }
+            if (comp instanceof Container) {
+                apply((Container) comp, cmd);
+            }
+        }
+    }
 
-	/**
-	 * Main method for testing.
-	 * 
-	 * @param args
-	 *            Ignored.
-	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(new MetalLookAndFeel());
-				} catch (Exception e) {
-				}
-				TestCommandToggleButtonsNoText frame = new TestCommandToggleButtonsNoText();
-				frame.setSize(800, 400);
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			}
-		});
-	}
+    /**
+     * Main method for testing.
+     * 
+     * @param args
+     *            Ignored.
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new MetalLookAndFeel());
+            } catch (Exception e) {
+            }
+            TestCommandToggleButtonsNoText frame = new TestCommandToggleButtonsNoText();
+            frame.setSize(800, 400);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        });
+    }
 }

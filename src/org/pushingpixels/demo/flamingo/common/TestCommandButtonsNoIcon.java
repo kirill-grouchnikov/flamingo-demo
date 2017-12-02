@@ -32,7 +32,6 @@ package org.pushingpixels.demo.flamingo.common;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -46,138 +45,103 @@ import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 
 public class TestCommandButtonsNoIcon extends TestCommandButtons {
-	@Override
-	protected JCommandButton createActionButton(CommandButtonDisplayState state) {
-		JCommandButton result = new JCommandButton(resourceBundle
-				.getString("Paste.text"));
-		result.setExtraText(resourceBundle.getString("Paste.textExtra"));
-		result.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(stamp() + ": Main paste");
-			}
-		});
-		result
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_ONLY);
-		result.setDisplayState(state);
-		result.setFlat(false);
-		return result;
-	}
+    @Override
+    protected JCommandButton createActionButton(CommandButtonDisplayState state) {
+        JCommandButton result = new JCommandButton(resourceBundle.getString("Paste.text"));
+        result.setExtraText(resourceBundle.getString("Paste.textExtra"));
+        result.addActionListener((ActionEvent e) -> System.out.println(stamp() + ": Main paste"));
+        result.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_ONLY);
+        result.setDisplayState(state);
+        result.setFlat(false);
+        return result;
+    }
 
-	@Override
-	protected JCommandButton createActionAndPopupMainActionButton(
-			CommandButtonDisplayState state) {
-		JCommandButton result = new JCommandButton(resourceBundle
-				.getString("Cut.text"));
-		result.setExtraText(resourceBundle.getString("Cut.textExtra"));
-		result.setPopupCallback(new TestPopupCallback());
-		result
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
-		result.setDisplayState(state);
-		result.setFlat(false);
-		result.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(stamp() + ": Cut");
-			}
-		});
-		return result;
-	}
+    @Override
+    protected JCommandButton createActionAndPopupMainActionButton(CommandButtonDisplayState state) {
+        JCommandButton result = new JCommandButton(resourceBundle.getString("Cut.text"));
+        result.setExtraText(resourceBundle.getString("Cut.textExtra"));
+        result.setPopupCallback(new TestPopupCallback());
+        result.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
+        result.setDisplayState(state);
+        result.setFlat(false);
+        result.addActionListener((ActionEvent e) -> System.out.println(stamp() + ": Cut"));
+        return result;
+    }
 
-	@Override
-	protected JCommandButton createActionAndPopupMainPopupButton(
-			CommandButtonDisplayState state) {
-		JCommandButton result = new JCommandButton(resourceBundle
-				.getString("Copy.text"));
-		result.setExtraText(resourceBundle.getString("Copy.textExtra"));
-		result.setPopupCallback(new TestPopupCallback());
-		result
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
-		result.setDisplayState(state);
-		result.setFlat(false);
-		result.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(stamp() + ": Copy");
-			}
-		});
-		return result;
-	}
+    @Override
+    protected JCommandButton createActionAndPopupMainPopupButton(CommandButtonDisplayState state) {
+        JCommandButton result = new JCommandButton(resourceBundle.getString("Copy.text"));
+        result.setExtraText(resourceBundle.getString("Copy.textExtra"));
+        result.setPopupCallback(new TestPopupCallback());
+        result.setCommandButtonKind(JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
+        result.setDisplayState(state);
+        result.setFlat(false);
+        result.addActionListener((ActionEvent e) -> System.out.println(stamp() + ": Copy"));
+        return result;
+    }
 
-	@Override
-	protected JCommandButton createPopupButton(CommandButtonDisplayState state) {
-		JCommandButton result = new JCommandButton(resourceBundle
-				.getString("SelectAll.text"));
-		result.setExtraText(resourceBundle.getString("SelectAll.textExtra"));
-		result.setPopupCallback(new TestPopupCallback());
-		result
-				.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
-		result.setDisplayState(state);
-		result.setFlat(false);
-		return result;
-	}
+    @Override
+    protected JCommandButton createPopupButton(CommandButtonDisplayState state) {
+        JCommandButton result = new JCommandButton(resourceBundle.getString("SelectAll.text"));
+        result.setExtraText(resourceBundle.getString("SelectAll.textExtra"));
+        result.setPopupCallback(new TestPopupCallback());
+        result.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
+        result.setDisplayState(state);
+        result.setFlat(false);
+        return result;
+    }
 
-	@Override
-	protected void configureControlPanel(JPanel controlPanel) {
-		super.configureControlPanel(controlPanel);
-		final JCheckBox noIcon = new JCheckBox("no icon");
-		noIcon.setSelected(true);
-		noIcon.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						apply(TestCommandButtonsNoIcon.this, new Command() {
-							public void apply(JCommandButton button) {
-								button.setIcon(noIcon.isSelected() ? null
-										: new Edit_paste());
-							};
-						});
-						TestCommandButtonsNoIcon.this.getContentPane()
-								.invalidate();
-						TestCommandButtonsNoIcon.this.getContentPane()
-								.validate();
-					}
-				});
-			}
-		});
-		controlPanel.add(noIcon);
-	}
+    @Override
+    protected void configureControlPanel(JPanel controlPanel) {
+        super.configureControlPanel(controlPanel);
+        final JCheckBox noIcon = new JCheckBox("no icon");
+        noIcon.setSelected(true);
+        noIcon.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
+            apply(TestCommandButtonsNoIcon.this, new Command() {
+                public void apply(JCommandButton button) {
+                    button.setIcon(noIcon.isSelected() ? null : new Edit_paste());
+                };
+            });
+            TestCommandButtonsNoIcon.this.getContentPane().invalidate();
+            TestCommandButtonsNoIcon.this.getContentPane().validate();
+        }));
+        controlPanel.add(noIcon);
+    }
 
-	private static interface Command {
-		void apply(JCommandButton button);
-	}
+    private static interface Command {
+        void apply(JCommandButton button);
+    }
 
-	private static void apply(Container cont, Command cmd) {
-		for (int i = 0; i < cont.getComponentCount(); i++) {
-			Component comp = cont.getComponent(i);
-			if (comp instanceof JCommandButton) {
-				JCommandButton cb = (JCommandButton) comp;
-				cmd.apply(cb);
-			}
-			if (comp instanceof Container) {
-				apply((Container) comp, cmd);
-			}
-		}
-	}
+    private static void apply(Container cont, Command cmd) {
+        for (int i = 0; i < cont.getComponentCount(); i++) {
+            Component comp = cont.getComponent(i);
+            if (comp instanceof JCommandButton) {
+                JCommandButton cb = (JCommandButton) comp;
+                cmd.apply(cb);
+            }
+            if (comp instanceof Container) {
+                apply((Container) comp, cmd);
+            }
+        }
+    }
 
-	/**
-	 * Main method for testing.
-	 * 
-	 * @param args
-	 *            Ignored.
-	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(new MetalLookAndFeel());
-				} catch (Exception e) {
-				}
-				TestCommandButtonsNoIcon frame = new TestCommandButtonsNoIcon();
-				frame.setSize(800, 400);
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			}
-		});
-	}
+    /**
+     * Main method for testing.
+     * 
+     * @param args
+     *            Ignored.
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new MetalLookAndFeel());
+            } catch (Exception e) {
+            }
+            TestCommandButtonsNoIcon frame = new TestCommandButtonsNoIcon();
+            frame.setSize(800, 400);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        });
+    }
 }

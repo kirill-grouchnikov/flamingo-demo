@@ -32,7 +32,6 @@ package org.pushingpixels.demo.flamingo.common;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -42,81 +41,58 @@ import javax.swing.SwingUtilities;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 
 public class TestCommandButtonsAutoRepeat extends TestCommandButtons {
-	@Override
-	protected void configureControlPanel(JPanel controlPanel) {
-		final JCheckBox autoRepeatActionMode = new JCheckBox(
-				"auto repeat action");
-		autoRepeatActionMode.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						apply(TestCommandButtonsAutoRepeat.this, new Command() {
-							public void apply(JCommandButton button) {
-								button.setAutoRepeatAction(autoRepeatActionMode
-										.isSelected());
-							};
-						});
-					}
-				});
-			}
-		});
-		final JCheckBox actionOnRolloverMode = new JCheckBox(
-				"action on rollover");
-		actionOnRolloverMode.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						apply(TestCommandButtonsAutoRepeat.this, new Command() {
-							public void apply(JCommandButton button) {
-								button
-										.setFireActionOnRollover(actionOnRolloverMode
-												.isSelected());
-							};
-						});
-					}
-				});
-			}
-		});
-		controlPanel.add(autoRepeatActionMode);
-		controlPanel.add(actionOnRolloverMode);
-	}
+    @Override
+    protected void configureControlPanel(JPanel controlPanel) {
+        final JCheckBox autoRepeatActionMode = new JCheckBox("auto repeat action");
+        autoRepeatActionMode.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
+            apply(TestCommandButtonsAutoRepeat.this, new Command() {
+                public void apply(JCommandButton button) {
+                    button.setAutoRepeatAction(autoRepeatActionMode.isSelected());
+                };
+            });
+        }));
+        final JCheckBox actionOnRolloverMode = new JCheckBox("action on rollover");
+        actionOnRolloverMode.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
+            apply(TestCommandButtonsAutoRepeat.this, new Command() {
+                public void apply(JCommandButton button) {
+                    button.setFireActionOnRollover(actionOnRolloverMode.isSelected());
+                };
+            });
+        }));
+        controlPanel.add(autoRepeatActionMode);
+        controlPanel.add(actionOnRolloverMode);
+    }
 
-	private static interface Command {
-		void apply(JCommandButton button);
-	}
+    private static interface Command {
+        void apply(JCommandButton button);
+    }
 
-	private static void apply(Container cont, Command cmd) {
-		for (int i = 0; i < cont.getComponentCount(); i++) {
-			Component comp = cont.getComponent(i);
-			if (comp instanceof JCommandButton) {
-				JCommandButton cb = (JCommandButton) comp;
-				cmd.apply(cb);
-			}
-			if (comp instanceof Container) {
-				apply((Container) comp, cmd);
-			}
-		}
-	}
+    private static void apply(Container cont, Command cmd) {
+        for (int i = 0; i < cont.getComponentCount(); i++) {
+            Component comp = cont.getComponent(i);
+            if (comp instanceof JCommandButton) {
+                JCommandButton cb = (JCommandButton) comp;
+                cmd.apply(cb);
+            }
+            if (comp instanceof Container) {
+                apply((Container) comp, cmd);
+            }
+        }
+    }
 
-	/**
-	 * Main method for testing.
-	 * 
-	 * @param args
-	 *            Ignored.
-	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				TestCommandButtonsAutoRepeat frame = new TestCommandButtonsAutoRepeat();
-				frame.setSize(800, 400);
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			}
-		});
-	}
+    /**
+     * Main method for testing.
+     * 
+     * @param args
+     *            Ignored.
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            TestCommandButtonsAutoRepeat frame = new TestCommandButtonsAutoRepeat();
+            frame.setSize(800, 400);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        });
+    }
 }

@@ -44,67 +44,60 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 
 public class TestCommandButtonsText extends TestCommandButtons {
-	private class CounterActionListener implements ActionListener {
-		int count = 0;
+    private class CounterActionListener implements ActionListener {
+        int count = 0;
 
-		@Override
-		public void actionPerformed(final ActionEvent e) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					count++;
-					AbstractCommandButton acb = (AbstractCommandButton) e
-							.getSource();
-					MessageFormat mf = new MessageFormat(resourceBundle
-							.getString("Clicked.text"));
-					mf.setLocale(currLocale);
-					acb.setText(mf.format(new Object[] { count }));
-					// System.out.println(acb.getText());
-				}
-			});
-		}
-	}
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            SwingUtilities.invokeLater(() -> {
+                count++;
+                AbstractCommandButton acb = (AbstractCommandButton) e.getSource();
+                MessageFormat mf = new MessageFormat(resourceBundle.getString("Clicked.text"));
+                mf.setLocale(currLocale);
+                acb.setText(mf.format(new Object[] { count }));
+                // System.out.println(acb.getText());
+            });
+        }
+    }
 
-	private void scan(Container cont) {
-		for (int i = 0; i < cont.getComponentCount(); i++) {
-			Component comp = cont.getComponent(i);
-			if (comp instanceof AbstractCommandButton) {
-				AbstractCommandButton acb = (AbstractCommandButton) comp;
-				acb.setText(resourceBundle.getString("Click.text"));
-				acb.addActionListener(new CounterActionListener());
-			}
-			if (comp instanceof Container) {
-				scan((Container) comp);
-			}
-		}
-	}
+    private void scan(Container cont) {
+        for (int i = 0; i < cont.getComponentCount(); i++) {
+            Component comp = cont.getComponent(i);
+            if (comp instanceof AbstractCommandButton) {
+                AbstractCommandButton acb = (AbstractCommandButton) comp;
+                acb.setText(resourceBundle.getString("Click.text"));
+                acb.addActionListener(new CounterActionListener());
+            }
+            if (comp instanceof Container) {
+                scan((Container) comp);
+            }
+        }
+    }
 
-	@Override
-	protected JPanel getButtonPanel() {
-		JPanel result = super.getButtonPanel();
-		scan(result);
-		return result;
-	}
+    @Override
+    protected JPanel getButtonPanel() {
+        JPanel result = super.getButtonPanel();
+        scan(result);
+        return result;
+    }
 
-	/**
-	 * Main method for testing.
-	 * 
-	 * @param args
-	 *            Ignored.
-	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(new MetalLookAndFeel());
-				} catch (Exception e) {
-				}
-				TestCommandButtonsText frame = new TestCommandButtonsText();
-				frame.setSize(800, 400);
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			}
-		});
-	}
+    /**
+     * Main method for testing.
+     * 
+     * @param args
+     *            Ignored.
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new MetalLookAndFeel());
+            } catch (Exception e) {
+            }
+            TestCommandButtonsText frame = new TestCommandButtonsText();
+            frame.setSize(800, 400);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        });
+    }
 }

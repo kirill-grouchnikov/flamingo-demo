@@ -76,7 +76,8 @@
         <pathelement location="${spoonbill.basedir}/drop/${spoonbill.version}/spoonbill-${spoonbill.version}.jar" />
 		<pathelement location="${ibis.basedir}/lib/batik-all-1.9.jar" />
         <pathelement location="${spoonbill.basedir}/lib/svnkit-1.9.0.jar" />
-        <pathelement location="${module.flamingo-demo.basedir}/lib/forms-1.2.0.jar" />
+        <pathelement location="${module.flamingo-demo.basedir}/lib/jgoodies-forms-1.8.0.jar" />
+        <pathelement location="${module.flamingo-demo.basedir}/lib/jgoodies-common-1.8.1.jar" />
 	</path>
 
 	<patternset id="excluded.from.module.flamingo-demo" />

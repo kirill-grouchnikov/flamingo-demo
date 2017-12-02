@@ -34,7 +34,6 @@ import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -51,89 +50,71 @@ import org.pushingpixels.demo.flamingo.common.LocaleSwitcher.LocaleCallback;
 import org.pushingpixels.flamingo.api.common.JCommandButtonPanel.LayoutKind;
 
 public class TestCommandButtonPanel extends JFrame {
-	protected ResourceBundle resourceBundle;
+    protected ResourceBundle resourceBundle;
 
-	protected Locale currLocale;
+    protected Locale currLocale;
 
-	private JScrollPane scroller;
+    private JScrollPane scroller;
 
-	private QuickStylesPanel buttonPanel;
+    private QuickStylesPanel buttonPanel;
 
-	public TestCommandButtonPanel() {
-		currLocale = Locale.getDefault();
-		resourceBundle = ResourceBundle.getBundle("test.resource.Resources",
-				currLocale);
+    public TestCommandButtonPanel() {
+        currLocale = Locale.getDefault();
+        resourceBundle = ResourceBundle.getBundle("test.resource.Resources", currLocale);
 
-		buttonPanel = new QuickStylesPanel(resourceBundle, currLocale);
-		scroller = new JScrollPane(buttonPanel);
+        buttonPanel = new QuickStylesPanel(resourceBundle, currLocale);
+        scroller = new JScrollPane(buttonPanel);
 
-		add(scroller, BorderLayout.CENTER);
-		JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        add(scroller, BorderLayout.CENTER);
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-		final JCheckBox toShowGroupLabels = new JCheckBox("show group labels");
-		toShowGroupLabels.setSelected(buttonPanel.isToShowGroupLabels());
-		toShowGroupLabels.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				buttonPanel
-						.setToShowGroupLabels(toShowGroupLabels.isSelected());
-				scroller.revalidate();
-			}
-		});
-		controlPanel.add(toShowGroupLabels);
+        final JCheckBox toShowGroupLabels = new JCheckBox("show group labels");
+        toShowGroupLabels.setSelected(buttonPanel.isToShowGroupLabels());
+        toShowGroupLabels.addActionListener((ActionEvent e) -> {
+            buttonPanel.setToShowGroupLabels(toShowGroupLabels.isSelected());
+            scroller.revalidate();
+        });
+        controlPanel.add(toShowGroupLabels);
 
-		final JCheckBox isRowFillLayout = new JCheckBox("use row fill layout");
-		isRowFillLayout
-				.setSelected(buttonPanel.getLayoutKind() == LayoutKind.ROW_FILL);
-		isRowFillLayout.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				buttonPanel
-						.setLayoutKind(isRowFillLayout.isSelected() ? LayoutKind.ROW_FILL
-								: LayoutKind.COLUMN_FILL);
-			}
-		});
-		controlPanel.add(isRowFillLayout);
+        final JCheckBox isRowFillLayout = new JCheckBox("use row fill layout");
+        isRowFillLayout.setSelected(buttonPanel.getLayoutKind() == LayoutKind.ROW_FILL);
+        isRowFillLayout.addActionListener((ActionEvent e) -> {
+            buttonPanel.setLayoutKind(
+                    isRowFillLayout.isSelected() ? LayoutKind.ROW_FILL : LayoutKind.COLUMN_FILL);
+        });
+        controlPanel.add(isRowFillLayout);
 
-		JComboBox localeSwitcher = LocaleSwitcher
-				.getLocaleSwitcher(new LocaleCallback() {
-					@Override
-					public void onLocaleSelected(Locale selected) {
-						currLocale = selected;
-						resourceBundle = ResourceBundle.getBundle(
-								"test.resource.Resources", currLocale);
-						remove(scroller);
+        JComboBox localeSwitcher = LocaleSwitcher.getLocaleSwitcher(new LocaleCallback() {
+            @Override
+            public void onLocaleSelected(Locale selected) {
+                currLocale = selected;
+                resourceBundle = ResourceBundle.getBundle("test.resource.Resources", currLocale);
+                remove(scroller);
 
-						buttonPanel = new QuickStylesPanel(resourceBundle,
-								currLocale);
-						scroller = new JScrollPane(buttonPanel);
-						add(scroller, BorderLayout.CENTER);
-						Window window = SwingUtilities
-								.getWindowAncestor(buttonPanel);
-						window.applyComponentOrientation(ComponentOrientation
-								.getOrientation(currLocale));
-						SwingUtilities.updateComponentTreeUI(window);
-					}
-				});
-		controlPanel.add(localeSwitcher);
+                buttonPanel = new QuickStylesPanel(resourceBundle, currLocale);
+                scroller = new JScrollPane(buttonPanel);
+                add(scroller, BorderLayout.CENTER);
+                Window window = SwingUtilities.getWindowAncestor(buttonPanel);
+                window.applyComponentOrientation(ComponentOrientation.getOrientation(currLocale));
+                SwingUtilities.updateComponentTreeUI(window);
+            }
+        });
+        controlPanel.add(localeSwitcher);
 
-		add(controlPanel, BorderLayout.SOUTH);
-		setSize(500, 300);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-	}
+        add(controlPanel, BorderLayout.SOUTH);
+        setSize(500, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+    }
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(new MetalLookAndFeel());
-				} catch (Exception e) {
-				}
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new MetalLookAndFeel());
+            } catch (Exception e) {
+            }
 
-				new TestCommandButtonPanel().setVisible(true);
-			}
-		});
-	}
+            new TestCommandButtonPanel().setVisible(true);
+        });
+    }
 }

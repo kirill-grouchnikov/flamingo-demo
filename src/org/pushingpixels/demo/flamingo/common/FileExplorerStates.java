@@ -32,7 +32,6 @@ package org.pushingpixels.demo.flamingo.common;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.List;
 
@@ -51,79 +50,73 @@ import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 
 public class FileExplorerStates extends JFrame {
-	private ExplorerFileViewPanel<File> filePanel;
+    private ExplorerFileViewPanel<File> filePanel;
 
-	private BreadcrumbFileSelector bar;
+    private BreadcrumbFileSelector bar;
 
-	public FileExplorerStates() {
-		super("File explorer");
+    public FileExplorerStates() {
+        super("File explorer");
 
-		this.bar = new BreadcrumbFileSelector();
+        this.bar = new BreadcrumbFileSelector();
 
-		this.setLayout(new BorderLayout());
-		this.add(bar, BorderLayout.NORTH);
+        this.setLayout(new BorderLayout());
+        this.add(bar, BorderLayout.NORTH);
 
-		this.filePanel = new ExplorerFileViewPanel<File>(bar, CommandButtonDisplayState.BIG,
-				null);
-		JScrollPane fileListScrollPane = new JScrollPane(this.filePanel);
+        this.filePanel = new ExplorerFileViewPanel<File>(bar, CommandButtonDisplayState.BIG, null);
+        JScrollPane fileListScrollPane = new JScrollPane(this.filePanel);
 
-		this.bar.getModel().addPathListener((BreadcrumbPathEvent event) -> 
-			SwingUtilities.invokeLater(() -> {
-				final List<BreadcrumbItem<File>> newPath = bar.getModel().getItems();
-				if (newPath.size() > 0) {
-					SwingWorker<List<StringValuePair<File>>, Void> worker = 
-							new SwingWorker<List<StringValuePair<File>>, Void>() {
-						@Override
-						protected List<StringValuePair<File>> doInBackground() throws Exception {
-							return bar.getCallback().getLeafs(newPath);
-						}
-	
-						@Override
-						protected void done() {
-							try {
-								filePanel.setFolder(get());
-							} catch (Exception exc) {
-							}
-						}
-					};
-					worker.execute();
-				}
-			}));
+        this.bar.getModel()
+                .addPathListener((BreadcrumbPathEvent event) -> SwingUtilities.invokeLater(() -> {
+                    final List<BreadcrumbItem<File>> newPath = bar.getModel().getItems();
+                    if (newPath.size() > 0) {
+                        SwingWorker<List<StringValuePair<File>>, Void> worker = new SwingWorker<List<StringValuePair<File>>, Void>() {
+                            @Override
+                            protected List<StringValuePair<File>> doInBackground()
+                                    throws Exception {
+                                return bar.getCallback().getLeafs(newPath);
+                            }
 
-		final JComboBox states = new JComboBox(new DefaultComboBoxModel(
-				new Object[] { CommandButtonDisplayState.BIG, CommandButtonDisplayState.TILE,
-						CommandButtonDisplayState.MEDIUM, CommandButtonDisplayState.SMALL }));
-		states.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				CommandButtonDisplayState selected = (CommandButtonDisplayState) states.getSelectedItem();
-				filePanel.cancelMainWorker();
-				filePanel.setIconState(selected);
-			}
-		});
+                            @Override
+                            protected void done() {
+                                try {
+                                    filePanel.setFolder(get());
+                                } catch (Exception exc) {
+                                }
+                            }
+                        };
+                        worker.execute();
+                    }
+                }));
 
-		JPanel controls = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		controls.add(states);
-		this.add(controls, BorderLayout.SOUTH);
-		this.add(fileListScrollPane, BorderLayout.CENTER);
-	}
+        final JComboBox states = new JComboBox(new DefaultComboBoxModel(new Object[] {
+                        CommandButtonDisplayState.BIG, CommandButtonDisplayState.TILE,
+                        CommandButtonDisplayState.MEDIUM, CommandButtonDisplayState.SMALL }));
+        states.addItemListener((ItemEvent e) -> {
+            CommandButtonDisplayState selected = (CommandButtonDisplayState) states
+                    .getSelectedItem();
+            filePanel.cancelMainWorker();
+            filePanel.setIconState(selected);
+        });
 
-	/**
-	 * Main method for testing.
-	 * 
-	 * @param args
-	 *            Ignored.
-	 */
-	public static void main(String... args) throws Exception {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				FileExplorerStates test = new FileExplorerStates();
-				test.setSize(500, 400);
-				test.setLocationRelativeTo(null);
-				test.setVisible(true);
-				test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			}
-		});
-	}
+        JPanel controls = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        controls.add(states);
+        this.add(controls, BorderLayout.SOUTH);
+        this.add(fileListScrollPane, BorderLayout.CENTER);
+    }
+
+    /**
+     * Main method for testing.
+     * 
+     * @param args
+     *            Ignored.
+     */
+    public static void main(String... args) throws Exception {
+        SwingUtilities.invokeLater(() -> {
+            FileExplorerStates test = new FileExplorerStates();
+            test.setSize(500, 400);
+            test.setLocationRelativeTo(null);
+            test.setVisible(true);
+            test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        });
+    }
 }

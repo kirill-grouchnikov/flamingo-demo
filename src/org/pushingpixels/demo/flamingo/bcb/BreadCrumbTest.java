@@ -32,7 +32,6 @@ package org.pushingpixels.demo.flamingo.bcb;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
@@ -54,99 +53,86 @@ import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 
 public class BreadCrumbTest extends JFrame {
-	protected BreadcrumbFileSelector bar;
+    protected BreadcrumbFileSelector bar;
 
-	protected ExplorerFileViewPanel<File> filePanel;
+    protected ExplorerFileViewPanel<File> filePanel;
 
-	protected JScrollPane fileListScrollPane;
+    protected JScrollPane fileListScrollPane;
 
-	public BreadCrumbTest() {
-		super("BreadCrumb test");
+    public BreadCrumbTest() {
+        super("BreadCrumb test");
 
-		this.bar = new BreadcrumbFileSelector();
-		this.bar.getModel().addPathListener((BreadcrumbPathEvent event) -> 
-			SwingUtilities.invokeLater(() -> {
-					final List<BreadcrumbItem<File>> newPath = bar.getModel().getItems();
-					System.out.println("New path is ");
-					for (BreadcrumbItem<File> item : newPath) {
-						System.out.println("\t" + item.getData().getAbsolutePath());
-					}
+        this.bar = new BreadcrumbFileSelector();
+        this.bar.getModel()
+                .addPathListener((BreadcrumbPathEvent event) -> SwingUtilities.invokeLater(() -> {
+                    final List<BreadcrumbItem<File>> newPath = bar.getModel().getItems();
+                    System.out.println("New path is ");
+                    for (BreadcrumbItem<File> item : newPath) {
+                        System.out.println("\t" + item.getData().getAbsolutePath());
+                    }
 
-					if (newPath.size() > 0) {
-						SwingWorker<List<StringValuePair<File>>, Void> worker = 
-								new SwingWorker<List<StringValuePair<File>>, Void>() {
-							@Override
-							protected List<StringValuePair<File>> doInBackground()
-									throws Exception {
-								return bar.getCallback().getLeafs(newPath);
-							}
+                    if (newPath.size() > 0) {
+                        SwingWorker<List<StringValuePair<File>>, Void> worker = new SwingWorker<List<StringValuePair<File>>, Void>() {
+                            @Override
+                            protected List<StringValuePair<File>> doInBackground()
+                                    throws Exception {
+                                return bar.getCallback().getLeafs(newPath);
+                            }
 
-							@Override
-							protected void done() {
-								try {
-									List<StringValuePair<File>> leafs = get();
-									filePanel.setFolder(leafs);
-								} catch (Exception exc) {
-								}
-							}
-						};
-						worker.execute();
-					}
-				}));
+                            @Override
+                            protected void done() {
+                                try {
+                                    List<StringValuePair<File>> leafs = get();
+                                    filePanel.setFolder(leafs);
+                                } catch (Exception exc) {
+                                }
+                            }
+                        };
+                        worker.execute();
+                    }
+                }));
 
-		this.setLayout(new BorderLayout());
-		this.add(bar, BorderLayout.NORTH);
+        this.setLayout(new BorderLayout());
+        this.add(bar, BorderLayout.NORTH);
 
-		this.filePanel = new ExplorerFileViewPanel<File>(bar,
-				CommandButtonDisplayState.MEDIUM, null);
-		this.filePanel.setUseNativeIcons(true);
-		fileListScrollPane = new JScrollPane(this.filePanel);
-		this.add(fileListScrollPane, BorderLayout.CENTER);
+        this.filePanel = new ExplorerFileViewPanel<File>(bar, CommandButtonDisplayState.MEDIUM,
+                null);
+        this.filePanel.setUseNativeIcons(true);
+        fileListScrollPane = new JScrollPane(this.filePanel);
+        this.add(fileListScrollPane, BorderLayout.CENTER);
 
-		JPanel controls = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JButton setPath = new JButton("Select and set path...");
-		setPath.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						JFileChooser folderChooser = new JFileChooser();
-						folderChooser
-								.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-						if (folderChooser.showOpenDialog(BreadCrumbTest.this) == JFileChooser.APPROVE_OPTION) {
-							File selected = folderChooser.getSelectedFile();
-							bar.setPath(selected);
-						}
-					}
-				});
-			}
-		});
-		controls.add(setPath);
-		this.add(controls, BorderLayout.SOUTH);
-	}
+        JPanel controls = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton setPath = new JButton("Select and set path...");
+        setPath.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
+            JFileChooser folderChooser = new JFileChooser();
+            folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (folderChooser.showOpenDialog(BreadCrumbTest.this) == JFileChooser.APPROVE_OPTION) {
+                File selected = folderChooser.getSelectedFile();
+                bar.setPath(selected);
+            }
+        }));
+        controls.add(setPath);
+        this.add(controls, BorderLayout.SOUTH);
+    }
 
-	/**
-	 * Main method for testing.
-	 * 
-	 * @param args
-	 *            Ignored.
-	 */
-	public static void main(String... args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(new MetalLookAndFeel());
-				} catch (Exception exc) {
-					exc.printStackTrace();
-				}
-				BreadCrumbTest test = new BreadCrumbTest();
-				test.setSize(550, 385);
-				test.setLocationRelativeTo(null);
-				test.setVisible(true);
-				test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			}
-		});
-	}
+    /**
+     * Main method for testing.
+     * 
+     * @param args
+     *            Ignored.
+     */
+    public static void main(String... args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(new MetalLookAndFeel());
+            } catch (Exception exc) {
+                exc.printStackTrace();
+            }
+            BreadCrumbTest test = new BreadCrumbTest();
+            test.setSize(550, 385);
+            test.setLocationRelativeTo(null);
+            test.setVisible(true);
+            test.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        });
+    }
 }

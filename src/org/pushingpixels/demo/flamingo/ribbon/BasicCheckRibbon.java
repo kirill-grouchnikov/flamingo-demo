@@ -123,6 +123,7 @@ import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Format_text_bold;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Format_text_italic;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Format_text_strikethrough;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Format_text_underline;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Help_browser;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Image_x_generic;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Mail_forward;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Mail_message_new;
@@ -221,11 +222,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
                             });
                     JCommandToggleButton jrb = new JCommandToggleButton(null, finalIcon);
                     jrb.setName("Group " + groupIndex + ", index " + i);
-                    jrb.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            System.out.println("Invoked action on " + index);
-                        }
-                    });
+                    jrb.addActionListener(
+                            (ActionEvent e) -> System.out.println("Invoked action on " + index));
                     String actionTooltipTitle = mfTooltipTitle.format(new Object[] { i });
                     String actionTooltipParagraph1 = mfTooltipParagraph.format(new Object[] { i });
                     jrb.setActionRichTooltip(
@@ -569,11 +567,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         JCommandButton mainButton = new JCommandButton(resourceBundle.getString("Paste.text"),
                 new Edit_paste());
-        mainButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Pasted!");
-            }
-        });
+        mainButton.addActionListener((ActionEvent e) -> System.out.println("Pasted!"));
         mainButton.setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu());
         mainButton.setCommandButtonKind(
                 JCommandButton.CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
@@ -657,7 +651,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
         formatRichTooltip.addDescriptionSection(
                 "Second paragraph that can be multiline as well to test this feature");
         formatRichTooltip.setMainImage(new Address_book_new(), new Dimension(32, 32));
-        formatRichTooltip.setFooterIcon(new help_browser());
+        formatRichTooltip.setFooterIcon(Help_browser.of(16, 16));
         formatRichTooltip.addFooterSection(
                 "Multiline footer description to provide a little bit more information on this subject");
         formatButton.setPopupRichTooltip(formatRichTooltip);
@@ -746,11 +740,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
             if (i == 1)
                 jrb.getActionModel().setSelected(true);
             jrb.setName("Style " + i);
-            jrb.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Invoked action on " + index);
-                }
-            });
+            jrb.addActionListener(
+                    (ActionEvent e) -> System.out.println("Invoked action on " + index));
             if (i < 10)
                 stylesGalleryButtonsList.add(jrb);
             else
@@ -1086,12 +1077,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         }
                     });
             JCommandToggleButton button = new JCommandToggleButton("", finalIcon);
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Activated action " + index);
-                }
-            });
+            button.addActionListener(
+                    (ActionEvent e) -> System.out.println("Activated action " + index));
             button.setHorizontalAlignment(SwingConstants.CENTER);
             transitionGalleryButtonsList.add(button);
         }
@@ -1122,12 +1109,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         }
                     });
             JCommandToggleButton button = new JCommandToggleButton("", finalIcon);
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Activated action " + index);
-                }
-            });
+            button.addActionListener(
+                    (ActionEvent e) -> System.out.println("Activated action " + index));
             button.setHorizontalAlignment(SwingConstants.CENTER);
             transitionGalleryButtonsList2.add(button);
         }
@@ -1238,12 +1221,9 @@ public class BasicCheckRibbon extends JRibbonFrame {
         RichTooltip helpTooltip = new RichTooltip();
         helpTooltip.setTitle(resourceBundle.getString("Help.tooltip.title"));
         helpTooltip.addDescriptionSection(resourceBundle.getString("Help.tooltip.actionParagraph"));
-        this.getRibbon().configureHelp(new help_browser(), helpTooltip, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(BasicCheckRibbon.this, "Help button clicked");
-            }
-        });
+        this.getRibbon().configureHelp(Help_browser.of(16, 16), helpTooltip,
+                (ActionEvent e) -> JOptionPane.showMessageDialog(BasicCheckRibbon.this,
+                        "Help button clicked"));
 
         group1 = new RibbonContextualTaskGroup(
                 resourceBundle.getString("Group1.textTaskGroupTitle"), Color.red,
@@ -1277,12 +1257,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
         // taskbar components
         JCommandButton taskbarButtonPaste = new JCommandButton("", new Edit_paste());
         taskbarButtonPaste.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
-        taskbarButtonPaste.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Taskbar Paste activated");
-            }
-        });
+        taskbarButtonPaste.addActionListener(
+                (ActionEvent e) -> System.out.println("Taskbar Paste activated"));
         taskbarButtonPaste
                 .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu());
         taskbarButtonPaste
@@ -1295,35 +1271,23 @@ public class BasicCheckRibbon extends JRibbonFrame {
         this.getRibbon().addTaskbarComponent(taskbarButtonPaste);
 
         JCommandButton taskbarButtonClear = new JCommandButton("", new Edit_clear());
-        taskbarButtonClear.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Taskbar Clear activated");
-            }
-        });
+        taskbarButtonClear.addActionListener(
+                (ActionEvent e) -> System.out.println("Taskbar Clear activated"));
         taskbarButtonClear.setEnabled(false);
         taskbarButtonClear.setActionKeyTip("2");
         this.getRibbon().addTaskbarComponent(taskbarButtonClear);
 
         JCommandButton taskbarButtonCopy = new JCommandButton("", new Edit_copy());
-        taskbarButtonCopy.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Taskbar Copy activated");
-            }
-        });
+        taskbarButtonCopy
+                .addActionListener((ActionEvent e) -> System.out.println("Taskbar Copy activated"));
         taskbarButtonCopy.setActionKeyTip("3");
         this.getRibbon().addTaskbarComponent(taskbarButtonCopy);
 
         this.getRibbon().addTaskbarComponent(new JSeparator(JSeparator.VERTICAL));
 
         JCommandButton taskbarButtonFind = new JCommandButton("", new Edit_find());
-        taskbarButtonFind.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Taskbar Find activated");
-            }
-        });
+        taskbarButtonFind
+                .addActionListener((ActionEvent e) -> System.out.println("Taskbar Find activated"));
         taskbarButtonFind.setActionKeyTip("4");
         this.getRibbon().addTaskbarComponent(taskbarButtonFind);
     }
@@ -1553,8 +1517,9 @@ public class BasicCheckRibbon extends JRibbonFrame {
         appMenuRichTooltip
                 .addDescriptionSection(resourceBundle.getString("AppMenu.tooltip.paragraph1"));
         try {
-            final BufferedImage appMenuButtonTooltipImage = ImageIO.read(BasicCheckRibbon.class
-                    .getResource("/org/pushingpixels/demo/flamingo/ribbon/appmenubutton-tooltip-main.png"));
+            final BufferedImage appMenuButtonTooltipImage = ImageIO
+                    .read(BasicCheckRibbon.class.getResource(
+                            "/org/pushingpixels/demo/flamingo/ribbon/appmenubutton-tooltip-main.png"));
             final int appMenuButtonTooltipImageWidth = appMenuButtonTooltipImage.getWidth();
             final int appMenuButtonTooltipImageHeight = appMenuButtonTooltipImage.getHeight();
             final float appMenuButtonTooltipImageRatio = (float) appMenuButtonTooltipImageWidth
@@ -1589,7 +1554,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 }
             }, new Dimension(appMenuButtonTooltipImageInitialWidth,
                     appMenuButtonTooltipImageInitialHeight));
-            appMenuRichTooltip.setFooterIcon(new help_browser());
+            appMenuRichTooltip.setFooterIcon(Help_browser.of(16, 16));
         } catch (IOException ioe) {
         }
         appMenuRichTooltip.addFooterSection(resourceBundle.getString("AppMenu.tooltip.footer1"));
@@ -1611,28 +1576,10 @@ public class BasicCheckRibbon extends JRibbonFrame {
     protected void configureControlPanel(DefaultFormBuilder builder) {
         final JCheckBox group1Visible = new JCheckBox("visible");
         final JCheckBox group2Visible = new JCheckBox("visible");
-        group1Visible.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        getRibbon().setVisible(group1, group1Visible.isSelected());
-                    }
-                });
-            }
-        });
-        group2Visible.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        getRibbon().setVisible(group2, group2Visible.isSelected());
-                    }
-                });
-            }
-        });
+        group1Visible.addActionListener((ActionEvent e) -> SwingUtilities
+                .invokeLater(() -> getRibbon().setVisible(group1, group1Visible.isSelected())));
+        group2Visible.addActionListener((ActionEvent e) -> SwingUtilities
+                .invokeLater(() -> getRibbon().setVisible(group2, group1Visible.isSelected())));
         builder.append("Group 1", group1Visible);
         builder.append("Group 2", group2Visible);
 
@@ -1640,51 +1587,33 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         final JCheckBox appMenuVisible = new JCheckBox("visible");
         appMenuVisible.setSelected(true);
-        appMenuVisible.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!appMenuVisible.isSelected())
-                            getRibbon().setApplicationMenu(null);
-                        else
-                            configureApplicationMenu();
-                    }
-                });
-            }
-        });
+        appMenuVisible.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
+            if (!appMenuVisible.isSelected())
+                getRibbon().setApplicationMenu(null);
+            else
+                configureApplicationMenu();
+        }));
         builder.append("App menu", appMenuVisible);
 
         final JCheckBox taskbarFull = new JCheckBox("full");
         taskbarFull.setSelected(true);
-        taskbarFull.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!taskbarFull.isSelected()) {
-                            List<Component> taskbarComps = new ArrayList<Component>(
-                                    getRibbon().getTaskbarComponents());
-                            for (Component taskbarComp : taskbarComps) {
-                                getRibbon().removeTaskbarComponent(taskbarComp);
-                            }
-                        } else {
-                            configureTaskBar();
-                        }
-                        repaint();
-                    }
-                });
+        taskbarFull.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
+            if (!taskbarFull.isSelected()) {
+                List<Component> taskbarComps = new ArrayList<Component>(
+                        getRibbon().getTaskbarComponents());
+                for (Component taskbarComp : taskbarComps) {
+                    getRibbon().removeTaskbarComponent(taskbarComp);
+                }
+            } else {
+                configureTaskBar();
             }
-        });
+            repaint();
+        }));
         builder.append("Taskbar", taskbarFull);
 
         JButton changeParagraph = new JButton("change");
-        changeParagraph.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
+        changeParagraph
+                .addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         paragraphBand.setGroupTitle(0, getRandomString(5, 15));
@@ -1702,9 +1631,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         }
                         return newTitle;
                     }
-                });
-            }
-        });
+                }));
         builder.append("Change 'Paragraph'", changeParagraph);
     }
 
@@ -1865,38 +1792,35 @@ public class BasicCheckRibbon extends JRibbonFrame {
             UIManager.setLookAndFeel(new MetalLookAndFeel());
         } catch (Exception exc) {
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                final BasicCheckRibbon c = new BasicCheckRibbon();
-                c.configureRibbon();
-                c.applyComponentOrientation(
-                        ComponentOrientation.getOrientation(Locale.getDefault()));
-                Rectangle r = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                        .getMaximumWindowBounds();
-                c.setPreferredSize(new Dimension(r.width, r.height / 2));
-                c.setMinimumSize(new Dimension(r.width / 10, r.height / 2));
-                c.pack();
-                c.setLocation(r.x, r.y);
-                c.setVisible(true);
-                c.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        SwingUtilities.invokeLater(() -> {
+            final BasicCheckRibbon c = new BasicCheckRibbon();
+            c.configureRibbon();
+            c.applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
+            Rectangle r = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                    .getMaximumWindowBounds();
+            c.setPreferredSize(new Dimension(r.width, r.height / 2));
+            c.setMinimumSize(new Dimension(r.width / 10, r.height / 2));
+            c.pack();
+            c.setLocation(r.x, r.y);
+            c.setVisible(true);
+            c.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                // c.addComponentListener(new ComponentAdapter() {
-                // @Override
-                // public void componentResized(ComponentEvent e) {
-                // System.out.println("Size " + c.getSize());
-                // }
-                // });
+            // c.addComponentListener(new ComponentAdapter() {
+            // @Override
+            // public void componentResized(ComponentEvent e) {
+            // System.out.println("Size " + c.getSize());
+            // }
+            // });
 
-                c.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                        .put(KeyStroke.getKeyStroke("alt shift E"), "installTracingRepaintManager");
-                c.getRootPane().getActionMap().put("installTracingRepaintManager",
-                        new AbstractAction() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                RepaintManager.setCurrentManager(new TracingRepaintManager());
-                            }
-                        });
-            }
+            c.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                    .put(KeyStroke.getKeyStroke("alt shift E"), "installTracingRepaintManager");
+            c.getRootPane().getActionMap().put("installTracingRepaintManager",
+                    new AbstractAction() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            RepaintManager.setCurrentManager(new TracingRepaintManager());
+                        }
+                    });
         });
     }
 
@@ -1948,20 +1872,16 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 }
             }
 
-            private void processPopup(MouseEvent e) {
-                Point pt = new Point(e.getPoint());
+            private void processPopup(MouseEvent me) {
+                Point pt = new Point(me.getPoint());
                 SwingUtilities.convertPointToScreen(pt, statusBar);
                 final JCommandPopupMenu menu = new JCommandPopupMenu();
                 for (int i = 0; i < 10; i++) {
                     final int ind = i;
                     final JCommandToggleMenuButton button = new JCommandToggleMenuButton(
                             "option " + i, null);
-                    button.getActionModel().addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            selection.put(ind, button.getActionModel().isSelected());
-                        }
-                    });
+                    button.getActionModel().addActionListener((ActionEvent ae) -> selection.put(ind,
+                            button.getActionModel().isSelected()));
                     if (selection.containsKey(i)) {
                         button.getActionModel().setSelected(selection.get(i));
                     }
