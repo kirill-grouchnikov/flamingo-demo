@@ -56,11 +56,11 @@
     <property name="spoonbill.basedir" value="${module.flamingo-demo.basedir}/../spoonbill" />
     <property name="trident.basedir" value="${module.flamingo-demo.basedir}/../trident" />
 
-	<property name="flamingo.version" value="5.3.00-rc" />
-	<property name="flamingo.versionKey" value="5.3.00rc Liadan" />
-	<property name="trident.version" value="1.5.00-rc" />
-    <property name="ibis.version" value="1.0.00-rc" />
-    <property name="spoonbill.version" value="1.0.00-rc" />
+	<property name="flamingo.version" value="5.3.00" />
+	<property name="flamingo.versionKey" value="5.3.00 Liadan" />
+	<property name="trident.version" value="1.5.00" />
+    <property name="ibis.version" value="1.0.00" />
+    <property name="spoonbill.version" value="1.0.00" />
 
 	<path id="flamingo-demo.module.bootclasspath">
 		<!-- Paths to be included in compilation bootclasspath -->
