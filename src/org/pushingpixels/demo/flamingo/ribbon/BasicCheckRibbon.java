@@ -125,6 +125,8 @@ import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Format_text_striketh
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Format_text_underline;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Help_browser;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Image_x_generic;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Internet_group_chat;
+import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Internet_mail;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Mail_forward;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Mail_message_new;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Network_wireless;
@@ -170,6 +172,7 @@ import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryFooter;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryPrimary;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntrySecondary;
+import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
@@ -1218,12 +1221,33 @@ public class BasicCheckRibbon extends JRibbonFrame {
         this.getRibbon().addTask(animationsTask);
         this.getRibbon().addTask(wrappedTask);
 
+        this.getRibbon()
+                .addAnchoredCommand(new RibbonCommandBuilder()
+                        .setText(resourceBundle.getString("Share.title"))
+                        .setIcon(Internet_mail.of(16, 16))
+                        .setActionKeyTip("GS")
+                        .setAction((ActionEvent e) -> JOptionPane
+                                .showMessageDialog(BasicCheckRibbon.this, "Share button clicked"))
+                        .build());
+
+        this.getRibbon()
+                .addAnchoredCommand(new RibbonCommandBuilder()
+                        .setIcon(Internet_group_chat.of(16, 16))
+                        .setActionKeyTip("GC")
+                        .setAction((ActionEvent e) -> JOptionPane
+                                .showMessageDialog(BasicCheckRibbon.this, "Chat button clicked"))
+                        .build());
+
         RichTooltip helpTooltip = new RichTooltip();
         helpTooltip.setTitle(resourceBundle.getString("Help.tooltip.title"));
         helpTooltip.addDescriptionSection(resourceBundle.getString("Help.tooltip.actionParagraph"));
-        this.getRibbon().configureHelp(Help_browser.of(16, 16), helpTooltip,
-                (ActionEvent e) -> JOptionPane.showMessageDialog(BasicCheckRibbon.this,
-                        "Help button clicked"));
+        this.getRibbon()
+                .addAnchoredCommand(new RibbonCommandBuilder().setIcon(Help_browser.of(16, 16))
+                        .setRichTooltip(helpTooltip)
+                        .setActionKeyTip("GH")
+                        .setAction((ActionEvent e) -> JOptionPane
+                                .showMessageDialog(BasicCheckRibbon.this, "Help button clicked"))
+                        .build());
 
         group1 = new RibbonContextualTaskGroup(
                 resourceBundle.getString("Group1.textTaskGroupTitle"), Color.red,
