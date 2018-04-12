@@ -68,7 +68,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -165,6 +164,7 @@ import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupEvent;
 import org.pushingpixels.flamingo.api.common.popup.PopupPanelManager.PopupListener;
 import org.pushingpixels.flamingo.api.ribbon.JFlowRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbon;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonComponent;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
@@ -1223,17 +1223,15 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         this.getRibbon()
                 .addAnchoredCommand(new RibbonCommandBuilder()
-                        .setText(resourceBundle.getString("Share.title"))
-                        .setIcon(Internet_mail.of(16, 16))
-                        .setActionKeyTip("GS")
+                        .setTitle(resourceBundle.getString("Share.title"))
+                        .setIcon(Internet_mail.of(16, 16)).setActionKeyTip("GS")
                         .setAction((ActionEvent e) -> JOptionPane
                                 .showMessageDialog(BasicCheckRibbon.this, "Share button clicked"))
                         .build());
 
         this.getRibbon()
                 .addAnchoredCommand(new RibbonCommandBuilder()
-                        .setIcon(Internet_group_chat.of(16, 16))
-                        .setActionKeyTip("GC")
+                        .setIcon(Internet_group_chat.of(16, 16)).setActionKeyTip("GC")
                         .setAction((ActionEvent e) -> JOptionPane
                                 .showMessageDialog(BasicCheckRibbon.this, "Chat button clicked"))
                         .build());
@@ -1243,8 +1241,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
         helpTooltip.addDescriptionSection(resourceBundle.getString("Help.tooltip.actionParagraph"));
         this.getRibbon()
                 .addAnchoredCommand(new RibbonCommandBuilder().setIcon(Help_browser.of(16, 16))
-                        .setRichTooltip(helpTooltip)
-                        .setActionKeyTip("GH")
+                        .setActionRichTooltip(helpTooltip).setActionKeyTip("GH")
                         .setAction((ActionEvent e) -> JOptionPane
                                 .showMessageDialog(BasicCheckRibbon.this, "Help button clicked"))
                         .build());
@@ -1278,42 +1275,37 @@ public class BasicCheckRibbon extends JRibbonFrame {
     }
 
     protected void configureTaskBar() {
+        JRibbon ribbon = this.getRibbon();
+        
         // taskbar components
-        JCommandButton taskbarButtonPaste = new JCommandButton("", new Edit_paste());
-        taskbarButtonPaste.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
-        taskbarButtonPaste.addActionListener(
-                (ActionEvent e) -> System.out.println("Taskbar Paste activated"));
-        taskbarButtonPaste
-                .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu());
-        taskbarButtonPaste
+        ribbon.addTaskbarCommand(new RibbonCommandBuilder().setIcon(Edit_paste.of(16, 16))
+                .setAction((ActionEvent e) -> System.out.println("Taskbar Paste activated"))
                 .setActionRichTooltip(new RichTooltip(resourceBundle.getString("Paste.text"),
-                        resourceBundle.getString("Paste.tooltip.actionParagraph1")));
-        taskbarButtonPaste
+                        resourceBundle.getString("Paste.tooltip.actionParagraph1")))
+                .setActionKeyTip("1")
+                .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu())
                 .setPopupRichTooltip(new RichTooltip(resourceBundle.getString("Paste.text"),
-                        resourceBundle.getString("Paste.tooltip.popupParagraph1")));
-        taskbarButtonPaste.setActionKeyTip("1");
-        this.getRibbon().addTaskbarComponent(taskbarButtonPaste);
+                        resourceBundle.getString("Paste.tooltip.popupParagraph1")))
+                .setTitleClickAction()
+                .build());
 
-        JCommandButton taskbarButtonClear = new JCommandButton("", new Edit_clear());
-        taskbarButtonClear.addActionListener(
-                (ActionEvent e) -> System.out.println("Taskbar Clear activated"));
-        taskbarButtonClear.setEnabled(false);
-        taskbarButtonClear.setActionKeyTip("2");
-        this.getRibbon().addTaskbarComponent(taskbarButtonClear);
+        ribbon.addTaskbarCommand(new RibbonCommandBuilder().setIcon(Edit_clear.of(16, 16))
+                .setAction((ActionEvent e) -> System.out.println("Taskbar Clear activated"))
+                .setEnabled(false)
+                .setActionKeyTip("2")
+                .build());
 
-        JCommandButton taskbarButtonCopy = new JCommandButton("", new Edit_copy());
-        taskbarButtonCopy
-                .addActionListener((ActionEvent e) -> System.out.println("Taskbar Copy activated"));
-        taskbarButtonCopy.setActionKeyTip("3");
-        this.getRibbon().addTaskbarComponent(taskbarButtonCopy);
+        ribbon.addTaskbarCommand(new RibbonCommandBuilder().setIcon(Edit_copy.of(16, 16))
+                .setAction((ActionEvent e) -> System.out.println("Taskbar Copy activated"))
+                .setActionKeyTip("3")
+                .build());
 
-        this.getRibbon().addTaskbarComponent(new JSeparator(JSeparator.VERTICAL));
+        ribbon.addTaskbarSeparator();
 
-        JCommandButton taskbarButtonFind = new JCommandButton("", new Edit_find());
-        taskbarButtonFind
-                .addActionListener((ActionEvent e) -> System.out.println("Taskbar Find activated"));
-        taskbarButtonFind.setActionKeyTip("4");
-        this.getRibbon().addTaskbarComponent(taskbarButtonFind);
+        ribbon.addTaskbarCommand(new RibbonCommandBuilder().setIcon(Edit_find.of(16, 16))
+                .setAction((ActionEvent e) -> System.out.println("Taskbar Find activated"))
+                .setActionKeyTip("4")
+                .build());
     }
 
     protected void configureApplicationMenu() {
