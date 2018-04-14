@@ -77,7 +77,6 @@ import javax.swing.PopupFactory;
 import javax.swing.RepaintManager;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -173,6 +172,7 @@ import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryFooter;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryPrimary;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntrySecondary;
+import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
 import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandToggleGroup;
 import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
@@ -363,12 +363,11 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         .setActionKeyTip("E").build(),
                 RibbonElementPriority.MEDIUM);
 
-        preferencesBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("KeyboardShortcuts.text"))
-                        .setIcon(Preferences_desktop_keyboard_shortcuts.of(16, 16))
-                        .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu())
-                        .setPopupKeyTip("H").build(),
-                RibbonElementPriority.MEDIUM);
+        preferencesBand.addRibbonCommand(new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("KeyboardShortcuts.text"))
+                .setIcon(Preferences_desktop_keyboard_shortcuts.of(16, 16))
+                .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu())
+                .setPopupKeyTip("H").build(), RibbonElementPriority.MEDIUM);
 
         preferencesBand.startGroup();
 
@@ -766,14 +765,14 @@ public class BasicCheckRibbon extends JRibbonFrame {
         quickStylesBand.setResizePolicies(
                 CoreRibbonResizePolicies.getCorePoliciesRestrictive(quickStylesBand));
 
-        Map<RibbonElementPriority, Integer> stylesGalleryVisibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
-        stylesGalleryVisibleButtonCounts.put(RibbonElementPriority.LOW, 1);
-        stylesGalleryVisibleButtonCounts.put(RibbonElementPriority.MEDIUM, 2);
-        stylesGalleryVisibleButtonCounts.put(RibbonElementPriority.TOP, 2);
+        Map<RibbonElementPriority, Integer> stylesGalleryVisibleCommandCounts = new HashMap<RibbonElementPriority, Integer>();
+        stylesGalleryVisibleCommandCounts.put(RibbonElementPriority.LOW, 1);
+        stylesGalleryVisibleCommandCounts.put(RibbonElementPriority.MEDIUM, 2);
+        stylesGalleryVisibleCommandCounts.put(RibbonElementPriority.TOP, 2);
 
-        List<StringValuePair<List<JCommandToggleButton>>> stylesGalleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
-        List<JCommandToggleButton> stylesGalleryButtonsList = new ArrayList<JCommandToggleButton>();
-        List<JCommandToggleButton> stylesGalleryButtonsList2 = new ArrayList<JCommandToggleButton>();
+        List<StringValuePair<List<RibbonCommand>>> stylesGalleryCommands = new ArrayList<StringValuePair<List<RibbonCommand>>>();
+        List<RibbonCommand> stylesGalleryCommandsList = new ArrayList<RibbonCommand>();
+        List<RibbonCommand> stylesGalleryCommandsList2 = new ArrayList<RibbonCommand>();
         MessageFormat mfButtonText = new MessageFormat(
                 resourceBundle.getString("StylesGallery.textButton"));
         mfButtonText.setLocale(currLocale);
@@ -793,28 +792,28 @@ public class BasicCheckRibbon extends JRibbonFrame {
                             g2d.dispose();
                         }
                     });
-            JCommandToggleButton jrb = new JCommandToggleButton(
-                    mfButtonText.format(new Object[] { i }), finalIcon);
-            if (i == 1)
-                jrb.getActionModel().setSelected(true);
-            jrb.setName("Style " + i);
-            jrb.addActionListener(
-                    (ActionEvent e) -> System.out.println("Invoked action on " + index));
+
+            RibbonCommand ribbonCommand = new RibbonCommandBuilder()
+                    .setTitle(mfButtonText.format(new Object[] { i })).setIcon(finalIcon)
+                    .setAction((ActionEvent e) -> System.out.println("Invoked action on " + index))
+                    .setToggleSelected(i == 1).build();
+
+            // jrb.setName("Style " + i);
             if (i < 10)
-                stylesGalleryButtonsList.add(jrb);
+                stylesGalleryCommandsList.add(ribbonCommand);
             else
-                stylesGalleryButtonsList2.add(jrb);
+                stylesGalleryCommandsList2.add(ribbonCommand);
         }
 
-        stylesGalleryButtons.add(new StringValuePair<List<JCommandToggleButton>>(
+        stylesGalleryCommands.add(new StringValuePair<List<RibbonCommand>>(
                 resourceBundle.getString("StylesGallery.textGroupTitle1"),
-                stylesGalleryButtonsList));
-        stylesGalleryButtons.add(new StringValuePair<List<JCommandToggleButton>>(
+                stylesGalleryCommandsList));
+        stylesGalleryCommands.add(new StringValuePair<List<RibbonCommand>>(
                 resourceBundle.getString("StylesGallery.textGroupTitle2"),
-                stylesGalleryButtonsList2));
+                stylesGalleryCommandsList2));
 
-        quickStylesBand.addRibbonGallery("Styles", stylesGalleryButtons,
-                stylesGalleryVisibleButtonCounts, 3, 3, JRibbonBand.BIG_FIXED_LANDSCAPE,
+        quickStylesBand.addRibbonGallery("Styles", stylesGalleryCommands,
+                stylesGalleryVisibleCommandCounts, 3, 3, JRibbonBand.BIG_FIXED_LANDSCAPE,
                 RibbonElementPriority.TOP);
         quickStylesBand.setRibbonGalleryPopupCallback("Styles", (JCommandPopupMenu menu) -> {
             JCommandMenuButton saveSelectionButton = new JCommandMenuButton(
@@ -1128,14 +1127,14 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 resourceBundle.getString("TransitionToThis.textBandTitle"),
                 new SimpleResizableIcon(RibbonElementPriority.TOP, 32, 32));
 
-        Map<RibbonElementPriority, Integer> transitionGalleryVisibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
-        transitionGalleryVisibleButtonCounts.put(RibbonElementPriority.LOW, 2);
-        transitionGalleryVisibleButtonCounts.put(RibbonElementPriority.MEDIUM, 4);
-        transitionGalleryVisibleButtonCounts.put(RibbonElementPriority.TOP, 6);
+        Map<RibbonElementPriority, Integer> transitionGalleryVisibleCommandCounts = new HashMap<RibbonElementPriority, Integer>();
+        transitionGalleryVisibleCommandCounts.put(RibbonElementPriority.LOW, 2);
+        transitionGalleryVisibleCommandCounts.put(RibbonElementPriority.MEDIUM, 4);
+        transitionGalleryVisibleCommandCounts.put(RibbonElementPriority.TOP, 6);
 
-        List<StringValuePair<List<JCommandToggleButton>>> transitionGalleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
+        List<StringValuePair<List<RibbonCommand>>> transitionGalleryCommands = new ArrayList<StringValuePair<List<RibbonCommand>>>();
 
-        List<JCommandToggleButton> transitionGalleryButtonsList = new ArrayList<JCommandToggleButton>();
+        List<RibbonCommand> transitionGalleryCommandsList = new ArrayList<RibbonCommand>();
         for (int i = 1; i <= 40; i++) {
             final int index = i;
             ResizableIcon mainIcon = new Appointment_new();
@@ -1157,17 +1156,20 @@ public class BasicCheckRibbon extends JRibbonFrame {
                             g2d.dispose();
                         }
                     });
-            JCommandToggleButton button = new JCommandToggleButton("", finalIcon);
-            button.addActionListener(
-                    (ActionEvent e) -> System.out.println("Activated action " + index));
-            button.setHorizontalAlignment(SwingConstants.CENTER);
-            transitionGalleryButtonsList.add(button);
-        }
-        transitionGalleryButtons.add(new StringValuePair<List<JCommandToggleButton>>(
-                resourceBundle.getString("TransitionGallery.textGroupTitle1"),
-                transitionGalleryButtonsList));
+            
+            RibbonCommand ribbonCommand = new RibbonCommandBuilder()
+                    .setIcon(finalIcon)
+                    .setAction((ActionEvent e) -> System.out.println("Activated action " + index))
+                    .setToggle()
+                    .build();
 
-        List<JCommandToggleButton> transitionGalleryButtonsList2 = new ArrayList<JCommandToggleButton>();
+            transitionGalleryCommandsList.add(ribbonCommand);
+        }
+        transitionGalleryCommands.add(new StringValuePair<List<RibbonCommand>>(
+                resourceBundle.getString("TransitionGallery.textGroupTitle1"),
+                transitionGalleryCommandsList));
+
+        List<RibbonCommand> transitionGalleryButtonsList2 = new ArrayList<RibbonCommand>();
         for (int i = 41; i <= 70; i++) {
             final int index = i;
             ResizableIcon mainIcon = new Appointment_new();
@@ -1189,18 +1191,21 @@ public class BasicCheckRibbon extends JRibbonFrame {
                             g2d.dispose();
                         }
                     });
-            JCommandToggleButton button = new JCommandToggleButton("", finalIcon);
-            button.addActionListener(
-                    (ActionEvent e) -> System.out.println("Activated action " + index));
-            button.setHorizontalAlignment(SwingConstants.CENTER);
-            transitionGalleryButtonsList2.add(button);
+
+            RibbonCommand ribbonCommand = new RibbonCommandBuilder()
+                    .setIcon(finalIcon)
+                    .setAction((ActionEvent e) -> System.out.println("Activated action " + index))
+                    .setToggle()
+                    .build();
+
+            transitionGalleryButtonsList2.add(ribbonCommand);
         }
-        transitionGalleryButtons.add(new StringValuePair<List<JCommandToggleButton>>(
+        transitionGalleryCommands.add(new StringValuePair<List<RibbonCommand>>(
                 resourceBundle.getString("TransitionGallery.textGroupTitle2"),
                 transitionGalleryButtonsList2));
 
-        transitionBand.addRibbonGallery("Transitions", transitionGalleryButtons,
-                transitionGalleryVisibleButtonCounts, 6, 6, CommandButtonDisplayState.SMALL,
+        transitionBand.addRibbonGallery("Transitions", transitionGalleryCommands,
+                transitionGalleryVisibleCommandCounts, 6, 6, CommandButtonDisplayState.SMALL,
                 RibbonElementPriority.TOP);
 
         transitionBand.startGroup();
