@@ -1693,17 +1693,23 @@ public class BasicCheckRibbon extends JRibbonFrame {
         taskbarFull.setSelected(true);
         taskbarFull.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
             if (!taskbarFull.isSelected()) {
-                List<Component> taskbarComps = new ArrayList<Component>(
-                        getRibbon().getTaskbarComponents());
-                for (Component taskbarComp : taskbarComps) {
-                    getRibbon().removeTaskbarComponent(taskbarComp);
-                }
+                getRibbon().clearTaskbar();
             } else {
                 configureTaskBar();
             }
-            repaint();
         }));
-        builder.append("Taskbar", taskbarFull);
+        final JCheckBox taskbarEnabled = new JCheckBox("enabled");
+        taskbarEnabled.setSelected(true);
+        taskbarEnabled.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
+            for (RibbonCommand command : getRibbon().getTaskbarCommands()) {
+                command.setEnabled(taskbarEnabled.isSelected());
+            }
+        }));
+        JPanel taskbarPanel = new JPanel();
+        taskbarPanel.setLayout(new BorderLayout());
+        taskbarPanel.add(taskbarFull, BorderLayout.LINE_START);
+        taskbarPanel.add(taskbarEnabled, BorderLayout.LINE_END);
+        builder.append("Taskbar", taskbarPanel);
 
         JButton changeParagraph = new JButton("change");
         changeParagraph
