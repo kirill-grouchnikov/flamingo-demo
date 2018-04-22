@@ -145,7 +145,6 @@ import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
 import org.pushingpixels.flamingo.api.common.HorizontalAlignment;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
 import org.pushingpixels.flamingo.api.common.JCommandButtonStrip;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
@@ -169,9 +168,8 @@ import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonComponent;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
-import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryFooter;
-import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntryPrimary;
-import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuEntrySecondary;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand.RibbonApplicationMenuPrimaryCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
 import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandToggleGroup;
@@ -1156,12 +1154,10 @@ public class BasicCheckRibbon extends JRibbonFrame {
                             g2d.dispose();
                         }
                     });
-            
-            RibbonCommand ribbonCommand = new RibbonCommandBuilder()
-                    .setIcon(finalIcon)
+
+            RibbonCommand ribbonCommand = new RibbonCommandBuilder().setIcon(finalIcon)
                     .setAction((ActionEvent e) -> System.out.println("Activated action " + index))
-                    .setToggle()
-                    .build();
+                    .setToggle().build();
 
             transitionGalleryCommandsList.add(ribbonCommand);
         }
@@ -1192,11 +1188,9 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         }
                     });
 
-            RibbonCommand ribbonCommand = new RibbonCommandBuilder()
-                    .setIcon(finalIcon)
+            RibbonCommand ribbonCommand = new RibbonCommandBuilder().setIcon(finalIcon)
                     .setAction((ActionEvent e) -> System.out.println("Activated action " + index))
-                    .setToggle()
-                    .build();
+                    .setToggle().build();
 
             transitionGalleryButtonsList2.add(ribbonCommand);
         }
@@ -1387,191 +1381,197 @@ public class BasicCheckRibbon extends JRibbonFrame {
     }
 
     protected void configureApplicationMenu() {
-        RibbonApplicationMenuEntryPrimary amEntryNew = new RibbonApplicationMenuEntryPrimary(
-                new Document_new(), resourceBundle.getString("AppMenuNew.text"),
-                (ActionEvent e) -> System.out.println("Invoked creating new document"),
-                CommandButtonKind.ACTION_ONLY);
-        amEntryNew.setActionKeyTip("N");
+        // "Create new" primary
+        RibbonApplicationMenuPrimaryCommand amEntryNew = new RibbonApplicationMenuPrimaryCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuNew.text"))
+                .setIcon(Document_new.of(16, 16))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked creating new document"))
+                .setActionKeyTip("N").build();
 
-        RibbonApplicationMenuEntryPrimary amEntryOpen = new RibbonApplicationMenuEntryPrimary(
-                new Document_open(), resourceBundle.getString("AppMenuOpen.text"),
-                (ActionEvent e) -> System.out.println("Invoked opening document"),
-                CommandButtonKind.ACTION_ONLY);
-        amEntryOpen.setRolloverCallback((JPanel targetPanel) -> {
-            targetPanel.removeAll();
-            JCommandButtonPanel openHistoryPanel = new JCommandButtonPanel(
-                    CommandButtonDisplayState.MEDIUM);
-            String groupName = resourceBundle.getString("AppMenuOpen.secondary.textGroupTitle1");
-            openHistoryPanel.addButtonGroup(groupName);
+        // "Open" primary
+        RibbonApplicationMenuPrimaryCommand amEntryOpen = new RibbonApplicationMenuPrimaryCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuOpen.text"))
+                .setIcon(Document_open.of(16, 16))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked opening document"))
+                .setRolloverCallback((JPanel targetPanel) -> {
+                    targetPanel.removeAll();
+                    JCommandButtonPanel openHistoryPanel = new JCommandButtonPanel(
+                            CommandButtonDisplayState.MEDIUM);
+                    String groupName = resourceBundle
+                            .getString("AppMenuOpen.secondary.textGroupTitle1");
+                    openHistoryPanel.addButtonGroup(groupName);
 
-            MessageFormat mf = new MessageFormat(
-                    resourceBundle.getString("AppMenuOpen.secondary.textButton"));
-            mf.setLocale(currLocale);
-            for (int i = 0; i < 5; i++) {
-                JCommandButton historyButton = new JCommandButton(mf.format(new Object[] { i }),
-                        new Text_html());
-                historyButton.setHorizontalAlignment(SwingUtilities.LEFT);
-                openHistoryPanel.addButtonToLastGroup(historyButton);
-            }
-            openHistoryPanel.setMaxButtonColumns(1);
-            targetPanel.setLayout(new BorderLayout());
-            targetPanel.add(openHistoryPanel, BorderLayout.CENTER);
-        });
-        amEntryOpen.setActionKeyTip("O");
+                    MessageFormat mf = new MessageFormat(
+                            resourceBundle.getString("AppMenuOpen.secondary.textButton"));
+                    mf.setLocale(currLocale);
+                    for (int i = 0; i < 5; i++) {
+                        JCommandButton historyButton = new JCommandButton(
+                                mf.format(new Object[] { i }), new Text_html());
+                        historyButton.setHorizontalAlignment(SwingUtilities.LEFT);
+                        openHistoryPanel.addButtonToLastGroup(historyButton);
+                    }
+                    openHistoryPanel.setMaxButtonColumns(1);
+                    targetPanel.setLayout(new BorderLayout());
+                    targetPanel.add(openHistoryPanel, BorderLayout.CENTER);
+                }).setActionKeyTip("O").build();
 
-        RibbonApplicationMenuEntryPrimary amEntrySave = new RibbonApplicationMenuEntryPrimary(
-                new Document_save(), resourceBundle.getString("AppMenuSave.text"),
-                (ActionEvent e) -> System.out.println("Invoked saving document"),
-                CommandButtonKind.ACTION_ONLY);
-        amEntrySave.setEnabled(false);
-        amEntrySave.setActionKeyTip("S");
+        // "Save" primary
+        RibbonApplicationMenuPrimaryCommand amEntrySave = new RibbonApplicationMenuPrimaryCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSave.text"))
+                .setIcon(Document_save.of(16, 16))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked saving document"))
+                .setActionKeyTip("S").setEnabled(false).build();
 
-        RibbonApplicationMenuEntryPrimary amEntrySaveAs = new RibbonApplicationMenuEntryPrimary(
-                new Document_save_as(), resourceBundle.getString("AppMenuSaveAs.text"),
-                (ActionEvent e) -> System.out.println("Invoked saving document as"),
-                CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
-        amEntrySaveAs.setActionKeyTip("A");
-        amEntrySaveAs.setPopupKeyTip("F");
+        // "Save as" primary + secondaries
+        RibbonCommand amEntrySaveAsWord = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSaveAs.word.text"))
+                .setIcon(X_office_document.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuSaveAs.word.description"))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked saved as Word"))
+                .setActionKeyTip("W").build();
 
-        RibbonApplicationMenuEntrySecondary amEntrySaveAsWord = new RibbonApplicationMenuEntrySecondary(
-                new X_office_document(), resourceBundle.getString("AppMenuSaveAs.word.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntrySaveAsWord
-                .setDescriptionText(resourceBundle.getString("AppMenuSaveAs.word.description"));
-        amEntrySaveAsWord.setActionKeyTip("W");
-        RibbonApplicationMenuEntrySecondary amEntrySaveAsHtml = new RibbonApplicationMenuEntrySecondary(
-                new Text_html(), resourceBundle.getString("AppMenuSaveAs.html.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntrySaveAsHtml
-                .setDescriptionText(resourceBundle.getString("AppMenuSaveAs.html.description"));
-        amEntrySaveAsHtml.setEnabled(false);
-        amEntrySaveAsHtml.setActionKeyTip("H");
-        RibbonApplicationMenuEntrySecondary amEntrySaveAsOtherFormats = new RibbonApplicationMenuEntrySecondary(
-                new Document_save_as(), resourceBundle.getString("AppMenuSaveAs.other.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntrySaveAsOtherFormats
-                .setDescriptionText(resourceBundle.getString("AppMenuSaveAs.other.description"));
-        amEntrySaveAsOtherFormats.setActionKeyTip("O");
+        RibbonCommand amEntrySaveAsHtml = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSaveAs.html.text"))
+                .setIcon(Text_html.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuSaveAs.html.description"))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked saved as HTML"))
+                .setActionKeyTip("H").setEnabled(false).build();
 
-        amEntrySaveAs.addSecondaryMenuGroup(
-                resourceBundle.getString("AppMenuSaveAs.secondary.textGroupTitle1"),
-                amEntrySaveAsWord, amEntrySaveAsHtml, amEntrySaveAsOtherFormats);
+        RibbonCommand amEntrySaveAsOtherFormats = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSaveAs.other.text"))
+                .setIcon(Document_save_as.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuSaveAs.other.description"))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked saved as other"))
+                .setActionKeyTip("O").build();
 
-        RibbonApplicationMenuEntryPrimary amEntryPrint = new RibbonApplicationMenuEntryPrimary(
-                new Document_print(), resourceBundle.getString("AppMenuPrint.text"),
-                (ActionEvent e) -> System.out.println("Invoked printing document"),
-                CommandButtonKind.ACTION_AND_POPUP_MAIN_ACTION);
-        amEntryPrint.setActionKeyTip("P");
-        amEntryPrint.setPopupKeyTip("W");
+        RibbonApplicationMenuPrimaryCommand amEntrySaveAs = new RibbonApplicationMenuPrimaryCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSaveAs.text"))
+                .setIcon(Document_save_as.of(16, 16))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked saving document as"))
+                .setActionKeyTip("A").setPopupKeyTip("F").setTitleClickAction()
+                .addSecondaryMenuGroup(
+                        resourceBundle.getString("AppMenuSaveAs.secondary.textGroupTitle1"),
+                        amEntrySaveAsWord, amEntrySaveAsHtml, amEntrySaveAsOtherFormats)
+                .build();
 
-        RibbonApplicationMenuEntrySecondary amEntryPrintSelect = new RibbonApplicationMenuEntrySecondary(
-                new Printer(), resourceBundle.getString("AppMenuPrint.print.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntryPrintSelect
-                .setDescriptionText(resourceBundle.getString("AppMenuPrint.print.description"));
-        amEntryPrintSelect.setActionKeyTip("P");
-        RibbonApplicationMenuEntrySecondary amEntryPrintDefault = new RibbonApplicationMenuEntrySecondary(
-                new Document_print(), resourceBundle.getString("AppMenuPrint.quick.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntryPrintDefault
-                .setDescriptionText(resourceBundle.getString("AppMenuPrint.quick.description"));
-        amEntryPrintDefault.setActionKeyTip("Q");
-        RibbonApplicationMenuEntrySecondary amEntryPrintPreview = new RibbonApplicationMenuEntrySecondary(
-                new Document_print_preview(), resourceBundle.getString("AppMenuPrint.preview.text"),
-                null, CommandButtonKind.ACTION_ONLY);
-        amEntryPrintPreview
-                .setDescriptionText(resourceBundle.getString("AppMenuPrint.preview.description"));
-        amEntryPrintPreview.setActionKeyTip("V");
+        // "Print" primary + secondaries
+        RibbonCommand amEntryPrintSelect = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuPrint.print.text"))
+                .setIcon(Printer.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuPrint.print.description"))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked print"))
+                .setActionKeyTip("P").build();
 
-        amEntryPrint.addSecondaryMenuGroup(
-                resourceBundle.getString("AppMenuPrint.secondary.textGroupTitle1"),
-                amEntryPrintSelect, amEntryPrintDefault, amEntryPrintPreview);
+        RibbonCommand amEntryPrintDefault = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuPrint.quick.text"))
+                .setIcon(Printer.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuPrint.quick.description"))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked quick"))
+                .setActionKeyTip("Q").build();
 
-        RibbonApplicationMenuEntrySecondary amEntryPrintMemo = new RibbonApplicationMenuEntrySecondary(
-                new Text_x_generic(), resourceBundle.getString("AppMenuPrint.memo.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntryPrintMemo.setActionKeyTip("M");
+        RibbonCommand amEntryPrintPreview = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuPrint.preview.text"))
+                .setIcon(Document_print_preview.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuPrint.preview.description"))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked preview"))
+                .setActionKeyTip("V").build();
 
-        RibbonApplicationMenuEntrySecondary amEntryPrintCustom = new RibbonApplicationMenuEntrySecondary(
-                new Text_x_generic(), resourceBundle.getString("AppMenuPrint.custom.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntryPrintCustom.setActionKeyTip("C");
+        RibbonCommand amEntryPrintMemo = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuPrint.memo.text"))
+                .setIcon(Text_x_generic.of(16, 16))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked memo"))
+                .setActionKeyTip("M").build();
 
-        amEntryPrint.addSecondaryMenuGroup(
-                resourceBundle.getString("AppMenuPrint.secondary.textGroupTitle2"),
-                amEntryPrintMemo, amEntryPrintCustom);
+        RibbonCommand amEntryPrintCustom = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuPrint.custom.text"))
+                .setIcon(Text_x_generic.of(16, 16))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked custom"))
+                .setActionKeyTip("C").build();
 
-        RibbonApplicationMenuEntryPrimary amEntrySend = new RibbonApplicationMenuEntryPrimary(
-                new Mail_forward(), resourceBundle.getString("AppMenuSend.text"),
-                (ActionEvent e) -> System.out.println("Invoked sending document"),
-                CommandButtonKind.POPUP_ONLY);
-        amEntrySend.setPopupKeyTip("D");
+        RibbonApplicationMenuPrimaryCommand amEntryPrint = new RibbonApplicationMenuPrimaryCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuPrint.text"))
+                .setIcon(Document_print.of(16, 16))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked printing as"))
+                .setActionKeyTip("P").setPopupKeyTip("W").setTitleClickAction()
+                .addSecondaryMenuGroup(
+                        resourceBundle.getString("AppMenuPrint.secondary.textGroupTitle1"),
+                        amEntryPrintSelect, amEntryPrintDefault, amEntryPrintPreview)
+                .addSecondaryMenuGroup(
+                        resourceBundle.getString("AppMenuPrint.secondary.textGroupTitle2"),
+                        amEntryPrintMemo, amEntryPrintCustom)
+                .build();
 
-        RibbonApplicationMenuEntrySecondary amEntrySendMail = new RibbonApplicationMenuEntrySecondary(
-                new Mail_message_new(), resourceBundle.getString("AppMenuSend.email.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntrySendMail
-                .setDescriptionText(resourceBundle.getString("AppMenuSend.email.description"));
-        amEntrySendMail.setActionKeyTip("E");
-        RibbonApplicationMenuEntrySecondary amEntrySendHtml = new RibbonApplicationMenuEntrySecondary(
-                new Text_html(), resourceBundle.getString("AppMenuSend.html.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntrySendHtml
-                .setDescriptionText(resourceBundle.getString("AppMenuSend.html.description"));
-        amEntrySendHtml.setActionKeyTip("H");
-        RibbonApplicationMenuEntrySecondary amEntrySendDoc = new RibbonApplicationMenuEntrySecondary(
-                new X_office_document(), resourceBundle.getString("AppMenuSend.word.text"), null,
-                CommandButtonKind.ACTION_ONLY);
-        amEntrySendDoc.setDescriptionText(resourceBundle.getString("AppMenuSend.word.description"));
-        amEntrySendDoc.setActionKeyTip("W");
-        RibbonApplicationMenuEntrySecondary amEntrySendWireless = new RibbonApplicationMenuEntrySecondary(
-                new Network_wireless(), resourceBundle.getString("AppMenuSend.wireless.text"), null,
-                CommandButtonKind.POPUP_ONLY);
-        amEntrySendWireless.setPopupKeyTip("X");
+        // "Send" primary + secondaries
+        RibbonCommand amEntrySendMail = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSend.email.text"))
+                .setIcon(Mail_message_new.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuSend.email.description"))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked email"))
+                .setActionKeyTip("E").build();
 
-        amEntrySendWireless.setPopupCallback((JCommandButton commandButton) -> {
-            JCommandPopupMenu wirelessChoices = new JCommandPopupMenu();
+        RibbonCommand amEntrySendHtml = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSend.html.text"))
+                .setIcon(Text_html.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuSend.html.description"))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked HTML"))
+                .setActionKeyTip("H").build();
 
-            JCommandMenuButton wiFiMenuButton = new JCommandMenuButton(
-                    resourceBundle.getString("AppMenuSend.wireless.wifi.text"),
-                    new EmptyResizableIcon(16));
-            wiFiMenuButton.setActionKeyTip("W");
-            wiFiMenuButton
-                    .addActionListener((ActionEvent e) -> System.out.println("WiFi activated"));
-            wirelessChoices.addMenuButton(wiFiMenuButton);
+        RibbonCommand amEntrySendDoc = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSend.word.text"))
+                .setIcon(X_office_document.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuSend.word.description"))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked Word"))
+                .setActionKeyTip("W").build();
 
-            JCommandMenuButton blueToothMenuButton = new JCommandMenuButton(
-                    resourceBundle.getString("AppMenuSend.wireless.bluetooth.text"),
-                    new EmptyResizableIcon(16));
-            blueToothMenuButton.setActionKeyTip("B");
-            blueToothMenuButton.addActionListener(
-                    (ActionEvent e) -> System.out.println("BlueTooth activated"));
-            wirelessChoices.addMenuButton(blueToothMenuButton);
-            return wirelessChoices;
-        });
+        RibbonCommand amEntrySendWireless = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSend.wireless.text"))
+                .setIcon(Network_wireless.of(16, 16))
+                .setExtraText(resourceBundle.getString("AppMenuSend.wireless.description"))
+                .setPopupCallback((JCommandButton commandButton) -> {
+                    JCommandPopupMenu wirelessChoices = new JCommandPopupMenu();
 
-        amEntrySendWireless
-                .setDescriptionText(resourceBundle.getString("AppMenuSend.wireless.description"));
+                    JCommandMenuButton wiFiMenuButton = new JCommandMenuButton(
+                            resourceBundle.getString("AppMenuSend.wireless.wifi.text"),
+                            new EmptyResizableIcon(16));
+                    wiFiMenuButton.setActionKeyTip("W");
+                    wiFiMenuButton.addActionListener(
+                            (ActionEvent e) -> System.out.println("WiFi activated"));
+                    wirelessChoices.addMenuButton(wiFiMenuButton);
 
-        amEntrySend.addSecondaryMenuGroup(
-                resourceBundle.getString("AppMenuSend.secondary.textGroupTitle1"), amEntrySendMail,
-                amEntrySendHtml, amEntrySendDoc, amEntrySendWireless);
+                    JCommandMenuButton blueToothMenuButton = new JCommandMenuButton(
+                            resourceBundle.getString("AppMenuSend.wireless.bluetooth.text"),
+                            new EmptyResizableIcon(16));
+                    blueToothMenuButton.setActionKeyTip("B");
+                    blueToothMenuButton.addActionListener(
+                            (ActionEvent e) -> System.out.println("BlueTooth activated"));
+                    wirelessChoices.addMenuButton(blueToothMenuButton);
+                    return wirelessChoices;
+                }).setPopupKeyTip("X").build();
 
-        RibbonApplicationMenuEntryPrimary amEntryExit = new RibbonApplicationMenuEntryPrimary(
-                new System_log_out(), resourceBundle.getString("AppMenuExit.text"),
-                (ActionEvent e) -> System.exit(0), CommandButtonKind.ACTION_ONLY);
-        amEntryExit.setActionKeyTip("X");
+        RibbonApplicationMenuPrimaryCommand amEntrySend = new RibbonApplicationMenuPrimaryCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuSend.text"))
+                .setIcon(Mail_forward.of(16, 16)).setPopupKeyTip("D")
+                .addSecondaryMenuGroup(
+                        resourceBundle.getString("AppMenuSend.secondary.textGroupTitle1"),
+                        amEntrySendMail, amEntrySendHtml, amEntrySendDoc, amEntrySendWireless)
+                .build();
+
+        // "Exit" primary
+        RibbonApplicationMenuPrimaryCommand amEntryExit = new RibbonApplicationMenuPrimaryCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuExit.text"))
+                .setIcon(System_log_out.of(16, 16)).setAction((ActionEvent ae) -> System.exit(0))
+                .setActionKeyTip("X").build();
 
         RibbonApplicationMenu applicationMenu = new RibbonApplicationMenu();
-        applicationMenu.addMenuEntry(amEntryNew);
-        applicationMenu.addMenuEntry(amEntryOpen);
-        applicationMenu.addMenuEntry(amEntrySave);
-        applicationMenu.addMenuEntry(amEntrySaveAs);
+        applicationMenu.addMenuCommand(amEntryNew);
+        applicationMenu.addMenuCommand(amEntryOpen);
+        applicationMenu.addMenuCommand(amEntrySave);
+        applicationMenu.addMenuCommand(amEntrySaveAs);
         applicationMenu.addMenuSeparator();
-        applicationMenu.addMenuEntry(amEntryPrint);
-        applicationMenu.addMenuEntry(amEntrySend);
+        applicationMenu.addMenuCommand(amEntryPrint);
+        applicationMenu.addMenuCommand(amEntrySend);
         applicationMenu.addMenuSeparator();
-        applicationMenu.addMenuEntry(amEntryExit);
+        applicationMenu.addMenuCommand(amEntryExit);
 
         applicationMenu.setDefaultCallback((JPanel targetPanel) -> {
             targetPanel.removeAll();
@@ -1594,15 +1594,17 @@ public class BasicCheckRibbon extends JRibbonFrame {
             targetPanel.add(openHistoryPanel, BorderLayout.CENTER);
         });
 
-        RibbonApplicationMenuEntryFooter amFooterProps = new RibbonApplicationMenuEntryFooter(
-                new Document_properties(), resourceBundle.getString("AppMenuOptions.text"),
-                (ActionEvent e) -> System.out.println("Invoked Options"));
-        RibbonApplicationMenuEntryFooter amFooterExit = new RibbonApplicationMenuEntryFooter(
-                new System_log_out(), resourceBundle.getString("AppMenuExit.text"),
-                (ActionEvent e) -> System.exit(0));
-        amFooterExit.setEnabled(false);
-        applicationMenu.addFooterEntry(amFooterProps);
-        applicationMenu.addFooterEntry(amFooterExit);
+        RibbonCommand amFooterProps = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuOptions.text"))
+                .setIcon(Document_properties.of(16, 16))
+                .setAction((ActionEvent ae) -> System.out.println("Invoked Options")).build();
+        RibbonCommand amFooterExit = new RibbonCommandBuilder()
+                .setTitle(resourceBundle.getString("AppMenuExit.text"))
+                .setIcon(System_log_out.of(16, 16)).setAction((ActionEvent ae) -> System.exit(0))
+                .setEnabled(false).build();
+
+        applicationMenu.addFooterCommand(amFooterProps);
+        applicationMenu.addFooterCommand(amFooterExit);
 
         this.getRibbon().setApplicationMenu(applicationMenu);
 
