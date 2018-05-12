@@ -45,7 +45,7 @@ import javax.swing.JPanel;
 
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.ibis.SvgBatikResizableIcon;
+import org.pushingpixels.ibis.icon.SvgBatikResizableIcon;
 
 public class SVGZBatikTestApplication extends JFrame {
 

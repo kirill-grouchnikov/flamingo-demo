@@ -1,7 +1,5 @@
 package org.pushingpixels.demo.flamingo.common;
 
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -12,18 +10,17 @@ import org.pushingpixels.flamingo.internal.ui.common.JRichTooltipPanel;
 
 public class TestRichTooltipPanels extends JFrame {
     public TestRichTooltipPanels() {
-        RichTooltip rt = new RichTooltip();
-        rt.setTitle("Main title that can go over multiple lines of text even exceeding the bigger");
-        rt.addDescriptionSection(
-                "Simple description that can go over multiple lines of text even exceeding the bigger");
-        rt.addDescriptionSection(
-                "Second paragraph that can be multiline as well to test this feature");
-        rt.setMainImage(new Address_book_new(), new Dimension(32, 32));
-        rt.setFooterIcon(Help_browser.of(32, 32));
-        rt.addFooterSection(
-                "Multiline footer description to provide a little bit more information on this subject");
-
-        JRichTooltipPanel panel = new JRichTooltipPanel(rt);
+        JRichTooltipPanel panel = new JRichTooltipPanel(new RichTooltip.RichTooltipBuilder()
+                .setTitle(
+                        "Main title that can go over multiple lines of text even exceeding the bigger")
+                .addDescriptionSection(
+                        "Simple description that can go over multiple lines of text even exceeding the bigger")
+                .addDescriptionSection(
+                        "Second paragraph that can be multiline as well to test this feature")
+                .setMainIcon(Address_book_new.of(32, 32)).setFooterIcon(Help_browser.of(32, 32))
+                .addFooterSection(
+                        "Multiline footer description to provide a little bit more information on this subject")
+                .build());
         this.add(panel);
 
         this.pack();

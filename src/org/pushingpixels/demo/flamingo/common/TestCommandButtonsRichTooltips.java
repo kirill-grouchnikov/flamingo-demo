@@ -31,7 +31,6 @@ package org.pushingpixels.demo.flamingo.common;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -51,28 +50,21 @@ public class TestCommandButtonsRichTooltips extends TestCommandButtons {
         JPanel result = super.getButtonPanel();
         apply(result, new Command() {
             public void apply(JCommandButton button) {
-                RichTooltip actionRichTooltip = new RichTooltip();
-                actionRichTooltip.setTitle(resourceBundle.getString("Tooltip.textActionTitle"));
-                actionRichTooltip
-                        .addDescriptionSection(resourceBundle.getString("Tooltip.textParagraph1"));
-                actionRichTooltip
-                        .addDescriptionSection(resourceBundle.getString("Tooltip.textParagraph2"));
-                actionRichTooltip.setMainImage(new Address_book_new(), new Dimension(32, 32));
-                actionRichTooltip.setFooterIcon(Help_browser.of(32, 32));
-                actionRichTooltip
-                        .addFooterSection(resourceBundle.getString("Tooltip.textFooterParagraph1"));
+                button.setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                        .setTitle(resourceBundle.getString("Tooltip.textActionTitle"))
+                        .addDescriptionSection(resourceBundle.getString("Tooltip.textParagraph1"))
+                        .addDescriptionSection(resourceBundle.getString("Tooltip.textParagraph2"))
+                        .setMainIcon(Address_book_new.of(32, 32))
+                        .setFooterIcon(Help_browser.of(32, 32))
+                        .addFooterSection(resourceBundle.getString("Tooltip.textFooterParagraph1"))
+                        .build());
 
-                button.setActionRichTooltip(actionRichTooltip);
-
-                RichTooltip popupRichTooltip = new RichTooltip();
-                popupRichTooltip.setTitle(resourceBundle.getString("Tooltip.textPopupTitle"));
-                popupRichTooltip
-                        .addDescriptionSection(resourceBundle.getString("Tooltip.textParagraph1"));
-                popupRichTooltip.setFooterIcon(Help_browser.of(32, 32));
-                popupRichTooltip
-                        .addFooterSection(resourceBundle.getString("Tooltip.textFooterParagraph1"));
-
-                button.setPopupRichTooltip(popupRichTooltip);
+                button.setPopupRichTooltip(new RichTooltip.RichTooltipBuilder()
+                        .setTitle(resourceBundle.getString("Tooltip.textPopupTitle"))
+                        .addDescriptionSection(resourceBundle.getString("Tooltip.textParagraph1"))
+                        .setFooterIcon(Help_browser.of(32, 32))
+                        .addFooterSection(resourceBundle.getString("Tooltip.textFooterParagraph1"))
+                        .build());
             };
         });
         return result;

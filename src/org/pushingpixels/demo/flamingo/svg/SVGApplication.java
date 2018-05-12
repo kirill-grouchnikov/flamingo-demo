@@ -79,8 +79,9 @@ import org.apache.batik.swing.svg.GVTTreeBuilderAdapter;
 import org.apache.batik.swing.svg.GVTTreeBuilderEvent;
 import org.apache.batik.swing.svg.SVGDocumentLoaderAdapter;
 import org.apache.batik.swing.svg.SVGDocumentLoaderEvent;
-import org.pushingpixels.ibis.SvgTranscoder;
-import org.pushingpixels.ibis.TranscoderListener;
+import org.pushingpixels.ibis.transcoder.SvgTranscoder;
+import org.pushingpixels.ibis.transcoder.TranscoderListener;
+import org.pushingpixels.ibis.transcoder.java.JavaLanguageRenderer;
 
 public class SVGApplication {
 
@@ -149,7 +150,7 @@ public class SVGApplication {
                     final PrintWriter pw = new PrintWriter(javaClassFilename);
 
                     SvgTranscoder transcoder = new SvgTranscoder(f.toURI().toURL().toString(),
-                            svgClassName);
+                            svgClassName, new JavaLanguageRenderer());
                     transcoder.setListener(new TranscoderListener() {
                         public Writer getWriter() {
                             return pw;

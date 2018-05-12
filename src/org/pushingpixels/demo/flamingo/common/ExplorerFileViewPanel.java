@@ -50,7 +50,7 @@ import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.IcoWrapperResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.ibis.SvgBatikResizableIcon;
+import org.pushingpixels.ibis.icon.SvgBatikResizableIcon;
 
 /**
  * Panel that hosts image-based buttons.

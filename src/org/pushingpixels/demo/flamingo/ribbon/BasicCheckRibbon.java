@@ -143,6 +143,7 @@ import org.pushingpixels.demo.flamingo.svg.tango.transcoded.Text_x_generic;
 import org.pushingpixels.demo.flamingo.svg.tango.transcoded.X_office_document;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.CommandToggleButtonGroup;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand;
 import org.pushingpixels.flamingo.api.common.HorizontalAlignment;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
@@ -152,6 +153,8 @@ import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.JCommandToggleMenuButton;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand.FlamingoCommandBuilder;
+import org.pushingpixels.flamingo.api.common.FlamingoCommand.FlamingoCommandToggleGroup;
 import org.pushingpixels.flamingo.api.common.icon.ColorResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.DecoratedResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
@@ -169,13 +172,11 @@ import org.pushingpixels.flamingo.api.ribbon.JRibbonComponent;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand;
-import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand.RibbonApplicationMenuPrimaryCommandBuilder;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandBuilder;
-import org.pushingpixels.flamingo.api.ribbon.RibbonCommand.RibbonCommandToggleGroup;
 import org.pushingpixels.flamingo.api.ribbon.RibbonContextualTaskGroup;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand.PrimaryClearRolloverCallback;
+import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenuPrimaryCommand.RibbonApplicationMenuPrimaryCommandBuilder;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizeSequencingPolicies;
 import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
@@ -230,7 +231,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
                     String actionTooltipTitle = mfTooltipTitle.format(new Object[] { i });
                     String actionTooltipParagraph1 = mfTooltipParagraph.format(new Object[] { i });
                     jrb.setActionRichTooltip(
-                            new RichTooltip(actionTooltipTitle, actionTooltipParagraph1));
+                            new RichTooltip.RichTooltipBuilder().setTitle(actionTooltipTitle)
+                                    .addDescriptionSection(actionTooltipParagraph1).build());
                     this.addButtonToLastGroup(jrb);
                 }
             }
@@ -296,7 +298,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         actionBand.startGroup();
         actionBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("AddressBook.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("AddressBook.text"))
                         .setIcon(Address_book_new.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Address Book activated"))
                         .setActionKeyTip("NA").build(),
@@ -304,27 +306,27 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         actionBand.startGroup();
         actionBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Document.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Document.text"))
                         .setIcon(Document_new.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Document activated"))
                         .setActionKeyTip("ND").build(),
                 RibbonElementPriority.TOP);
 
         actionBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Appointment.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Appointment.text"))
                         .setIcon(Appointment_new.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Appointment activated"))
                         .setActionKeyTip("NP").build(),
                 RibbonElementPriority.MEDIUM);
 
         actionBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Bookmark.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Bookmark.text"))
                         .setIcon(Bookmark_new.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Bookmark activated"))
                         .setActionKeyTip("NB").build(),
                 RibbonElementPriority.MEDIUM);
 
-        actionBand.addRibbonCommand(new RibbonCommandBuilder()
+        actionBand.addRibbonCommand(new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("Contact.text")).setIcon(Contact_new.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Contact activated"))
                 .setActionKeyTip("NC").build(), RibbonElementPriority.MEDIUM);
@@ -347,21 +349,20 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         preferencesBand.startGroup();
 
-        preferencesBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Accessibility.text"))
-                        .setIcon(Preferences_desktop_accessibility.of(16, 16))
-                        .setAction((ActionEvent e) -> System.out.println("Accessibility activated"))
-                        .setActionKeyTip("Y").build(),
-                RibbonElementPriority.MEDIUM);
+        preferencesBand.addRibbonCommand(new FlamingoCommandBuilder()
+                .setTitle(resourceBundle.getString("Accessibility.text"))
+                .setIcon(Preferences_desktop_accessibility.of(16, 16))
+                .setAction((ActionEvent e) -> System.out.println("Accessibility activated"))
+                .setActionKeyTip("Y").build(), RibbonElementPriority.MEDIUM);
 
         preferencesBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Assistive.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Assistive.text"))
                         .setIcon(Preferences_desktop_assistive_technology.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Assistive activated"))
                         .setActionKeyTip("E").build(),
                 RibbonElementPriority.MEDIUM);
 
-        preferencesBand.addRibbonCommand(new RibbonCommandBuilder()
+        preferencesBand.addRibbonCommand(new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("KeyboardShortcuts.text"))
                 .setIcon(Preferences_desktop_keyboard_shortcuts.of(16, 16))
                 .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu())
@@ -370,14 +371,14 @@ public class BasicCheckRibbon extends JRibbonFrame {
         preferencesBand.startGroup();
 
         preferencesBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Font.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Font.text"))
                         .setIcon(Preferences_desktop_font.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Font activated"))
                         .setActionKeyTip("Z").build(),
                 RibbonElementPriority.TOP);
 
         preferencesBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Locale.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Locale.text"))
                         .setIcon(Preferences_desktop_locale.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Locale activated"))
                         .setActionKeyTip("L").build(),
@@ -386,14 +387,14 @@ public class BasicCheckRibbon extends JRibbonFrame {
         preferencesBand.startGroup();
 
         preferencesBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Screensaver.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Screensaver.text"))
                         .setIcon(Preferences_desktop_screensaver.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Screensaver activated"))
                         .setActionKeyTip("V").build(),
                 RibbonElementPriority.MEDIUM);
 
         preferencesBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Themes.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Themes.text"))
                         .setIcon(Preferences_desktop_theme.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Themes activated"))
                         .setActionKeyTip("T").build(),
@@ -413,13 +414,13 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 new JSpinner(new SpinnerNumberModel(0, 0, 100, 5)));
         justifyLeftWrapper.setKeyTip("PL");
 
-        RichTooltip justifyLeftTooltip = new RichTooltip();
-        justifyLeftTooltip.setTitle(resourceBundle.getString("IndentLeft.tooltip.title"));
-        justifyLeftTooltip.addDescriptionSection(
-                resourceBundle.getString("IndentLeft.tooltip.actionParagraph1"));
-        justifyLeftTooltip.addDescriptionSection(
-                resourceBundle.getString("IndentLeft.tooltip.actionParagraph2"));
-        justifyLeftWrapper.setRichTooltip(justifyLeftTooltip);
+        justifyLeftWrapper.setRichTooltip(new RichTooltip.RichTooltipBuilder()
+                .setTitle(resourceBundle.getString("IndentLeft.tooltip.title"))
+                .addDescriptionSection(
+                        resourceBundle.getString("IndentLeft.tooltip.actionParagraph1"))
+                .addDescriptionSection(
+                        resourceBundle.getString("IndentLeft.tooltip.actionParagraph2"))
+                .build());
 
         paragraphBand.addRibbonComponent(justifyLeftWrapper);
 
@@ -428,13 +429,13 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 new JSpinner(new SpinnerNumberModel(0, 0, 100, 5)));
         justifyRightWrapper.setKeyTip("PR");
 
-        RichTooltip justifyRightTooltip = new RichTooltip();
-        justifyRightTooltip.setTitle(resourceBundle.getString("IndentRight.tooltip.title"));
-        justifyRightTooltip.addDescriptionSection(
-                resourceBundle.getString("IndentRight.tooltip.actionParagraph1"));
-        justifyRightTooltip.addDescriptionSection(
-                resourceBundle.getString("IndentRight.tooltip.actionParagraph2"));
-        justifyRightWrapper.setRichTooltip(justifyRightTooltip);
+        justifyRightWrapper.setRichTooltip(new RichTooltip.RichTooltipBuilder()
+                .setTitle(resourceBundle.getString("IndentRight.tooltip.title"))
+                .addDescriptionSection(
+                        resourceBundle.getString("IndentRight.tooltip.actionParagraph1"))
+                .addDescriptionSection(
+                        resourceBundle.getString("IndentRight.tooltip.actionParagraph2"))
+                .build());
 
         paragraphBand.addRibbonComponent(justifyRightWrapper);
 
@@ -530,9 +531,10 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         result.startGroup();
 
-        RibbonCommandToggleGroup locationGroup = new RibbonCommandToggleGroup();
+        FlamingoCommandToggleGroup locationGroup = new FlamingoCommandToggleGroup();
         result.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("DocumentLocal.text"))
+                new FlamingoCommandBuilder()
+                        .setTitle(resourceBundle.getString("DocumentLocal.text"))
                         .setIcon(Folder.of(16, 16))
                         .setAction(
                                 (ActionEvent e) -> System.out.println("Document Local activated"))
@@ -540,7 +542,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 RibbonElementPriority.TOP);
 
         result.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("DocumentRemote.text"))
+                new FlamingoCommandBuilder()
+                        .setTitle(resourceBundle.getString("DocumentRemote.text"))
                         .setIcon(Folder_remote.of(16, 16))
                         .setAction(
                                 (ActionEvent e) -> System.out.println("Document Remote activated"))
@@ -548,7 +551,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 RibbonElementPriority.TOP);
 
         result.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("DocumentSaved.text"))
+                new FlamingoCommandBuilder()
+                        .setTitle(resourceBundle.getString("DocumentSaved.text"))
                         .setIcon(Folder_saved_search.of(16, 16))
                         .setAction(
                                 (ActionEvent e) -> System.out.println("Document Saved activated"))
@@ -557,34 +561,34 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         result.startGroup();
 
-        result.addRibbonCommand(new RibbonCommandBuilder()
+        result.addRibbonCommand(new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("DocumentNew.text"))
                 .setIcon(Document_new.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Document New activated")).build(),
                 RibbonElementPriority.MEDIUM);
 
         result.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("DocumentOpen.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("DocumentOpen.text"))
                         .setIcon(Document_open.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Document Open activated"))
                         .build(),
                 RibbonElementPriority.MEDIUM);
 
         result.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("DocumentSave.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("DocumentSave.text"))
                         .setIcon(Document_save.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Document Save activated"))
                         .build(),
                 RibbonElementPriority.MEDIUM);
 
-        result.addRibbonCommand(new RibbonCommandBuilder()
+        result.addRibbonCommand(new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("DocumentPrint.text"))
                 .setIcon(Document_print.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Document Print activated"))
                 .build(), RibbonElementPriority.MEDIUM);
 
         result.addRibbonCommand(
-                new RibbonCommandBuilder()
+                new FlamingoCommandBuilder()
                         .setTitle(resourceBundle.getString("DocumentPrintPreview.text"))
                         .setIcon(Document_print_preview.of(16, 16))
                         .setAction((ActionEvent e) -> System.out
@@ -593,7 +597,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 RibbonElementPriority.MEDIUM);
 
         result.addRibbonCommand(
-                new RibbonCommandBuilder()
+                new FlamingoCommandBuilder()
                         .setTitle(resourceBundle.getString("DocumentProperties.text"))
                         .setIcon(Document_properties.of(16, 16))
                         .setAction((ActionEvent e) -> System.out
@@ -611,42 +615,47 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 resourceBundle.getString("Clipboard.textBandTitle"), new Edit_paste(),
                 new ExpandActionListener());
         clipboardBand.setExpandButtonKeyTip("FO");
-        RichTooltip expandRichTooltip = new RichTooltip();
-        expandRichTooltip.setTitle(resourceBundle.getString("Clipboard.textBandTitle"));
-        expandRichTooltip.addDescriptionSection(
-                resourceBundle.getString("Clipboard.textBandTooltipParagraph1"));
-        clipboardBand.setExpandButtonRichTooltip(expandRichTooltip);
+        clipboardBand
+                .setExpandButtonRichTooltip(new RichTooltip.RichTooltipBuilder()
+                        .setTitle(resourceBundle.getString("Clipboard.textBandTitle"))
+                        .addDescriptionSection(
+                                resourceBundle.getString("Clipboard.textBandTooltipParagraph1"))
+                        .build());
+
         clipboardBand.setCollapsedStateKeyTip("ZC");
-
-        RichTooltip mainRichTooltip = new RichTooltip();
-        mainRichTooltip.setTitle(resourceBundle.getString("Paste.text"));
-        mainRichTooltip
-                .addDescriptionSection(resourceBundle.getString("Paste.tooltip.actionParagraph1"));
-
-        RichTooltip mainPopupRichTooltip = new RichTooltip();
-        mainPopupRichTooltip.setTitle(resourceBundle.getString("Paste.text"));
-        mainPopupRichTooltip
-                .addDescriptionSection(resourceBundle.getString("Paste.tooltip.popupParagraph1"));
-
-        clipboardBand.addRibbonCommand(new RibbonCommandBuilder()
-                .setTitle(resourceBundle.getString("Paste.text")).setIcon(Edit_paste.of(16, 16))
-                .setAction((ActionEvent e) -> System.out.println("Pasted!"))
-                .setActionRichTooltip(mainRichTooltip)
-                .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu())
-                .setPopupRichTooltip(mainPopupRichTooltip).setPopupKeyTip("V").setTitleClickAction()
-                .build(), RibbonElementPriority.TOP);
-
-        RichTooltip cutRichTooltip = new RichTooltip();
-        cutRichTooltip.setTitle(resourceBundle.getString("Cut.text"));
-        cutRichTooltip
-                .addDescriptionSection(resourceBundle.getString("Cut.tooltip.actionParagraph1"));
 
         clipboardBand
                 .addRibbonCommand(
-                        new RibbonCommandBuilder().setTitle(resourceBundle.getString("Cut.text"))
+                        new FlamingoCommandBuilder()
+                                .setTitle(resourceBundle.getString("Paste.text"))
+                                .setIcon(Edit_paste.of(16, 16))
+                                .setAction((ActionEvent e) -> System.out.println("Pasted!"))
+                                .setActionRichTooltip(
+                                        new RichTooltip.RichTooltipBuilder()
+                                                .setTitle(resourceBundle.getString("Paste.text"))
+                                                .addDescriptionSection(resourceBundle.getString(
+                                                        "Paste.tooltip.actionParagraph1"))
+                                                .build())
+                                .setPopupCallback(
+                                        (JCommandButton commandButton) -> new SamplePopupMenu())
+                                .setPopupRichTooltip(new RichTooltip.RichTooltipBuilder()
+                                        .setTitle(resourceBundle.getString("Paste.text"))
+                                        .addDescriptionSection(resourceBundle
+                                                .getString("Paste.tooltip.popupParagraph1"))
+                                        .build())
+                                .setPopupKeyTip("V").setTitleClickAction().build(),
+                        RibbonElementPriority.TOP);
+
+        clipboardBand
+                .addRibbonCommand(
+                        new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Cut.text"))
                                 .setIcon(Edit_cut.of(16, 16))
                                 .setAction((ActionEvent e) -> System.out.println("Cut!"))
-                                .setActionRichTooltip(cutRichTooltip)
+                                .setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                                        .setTitle(resourceBundle.getString("Cut.text"))
+                                        .addDescriptionSection(resourceBundle
+                                                .getString("Cut.tooltip.actionParagraph1"))
+                                        .build())
                                 .setPopupCallback(
                                         (JCommandButton commandButton) -> new SamplePopupMenu())
                                 .setPopupKeyTip("X").setTitleClickAction().build(),
@@ -654,7 +663,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         clipboardBand
                 .addRibbonCommand(
-                        new RibbonCommandBuilder().setTitle(resourceBundle.getString("Copy.text"))
+                        new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Copy.text"))
                                 .setIcon(Edit_copy.of(16, 16))
                                 .setAction((ActionEvent e) -> System.out.println("Copy!"))
                                 .setPopupCallback(
@@ -691,23 +700,21 @@ public class BasicCheckRibbon extends JRibbonFrame {
             return popupMenu;
         };
 
-        RichTooltip formatRichTooltip = new RichTooltip();
-        formatRichTooltip.setTitle(
-                "Main title that can go over multiple lines of text even exceeding the bigger");
-        formatRichTooltip.addDescriptionSection(
-                "Simple description that can go over multiple lines of text even exceeding the bigger");
-        formatRichTooltip.addDescriptionSection(
-                "Second paragraph that can be multiline as well to test this feature");
-        formatRichTooltip.setMainImage(new Address_book_new(), new Dimension(32, 32));
-        formatRichTooltip.setFooterIcon(Help_browser.of(16, 16));
-        formatRichTooltip.addFooterSection(
-                "Multiline footer description to provide a little bit more information on this subject");
-
-        clipboardBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Format.text"))
-                        .setIcon(Edit_paste.of(16, 16)).setPopupCallback(formatButtonPopupCallback)
-                        .setPopupRichTooltip(formatRichTooltip).setPopupKeyTip("FP").build(),
-                RibbonElementPriority.MEDIUM);
+        clipboardBand.addRibbonCommand(new FlamingoCommandBuilder()
+                .setTitle(resourceBundle.getString("Format.text")).setIcon(Edit_paste.of(16, 16))
+                .setPopupCallback(formatButtonPopupCallback)
+                .setPopupRichTooltip(new RichTooltip.RichTooltipBuilder().setTitle(
+                        "Main title that can go over multiple lines of text even exceeding the bigger")
+                        .addDescriptionSection(
+                                "Simple description that can go over multiple lines of text even exceeding the bigger")
+                        .addDescriptionSection(
+                                "Second paragraph that can be multiline as well to test this feature")
+                        .setMainIcon(Address_book_new.of(32, 32))
+                        .setFooterIcon(Help_browser.of(16, 16))
+                        .addFooterSection(
+                                "Multiline footer description to provide a little bit more information on this subject")
+                        .build())
+                .setPopupKeyTip("FP").build(), RibbonElementPriority.MEDIUM);
 
         List<RibbonBandResizePolicy> resizePolicies = new ArrayList<RibbonBandResizePolicy>();
         resizePolicies.add(new CoreRibbonResizePolicies.Mirror(clipboardBand.getControlPanel()));
@@ -722,25 +729,25 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 new Edit_find());
         findBand.setCollapsedStateKeyTip("ZY");
 
-        findBand.addRibbonCommand(new RibbonCommandBuilder()
+        findBand.addRibbonCommand(new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("Search.text")).setIcon(System_search.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Search activated"))
                 .setActionKeyTip("FD").build(), RibbonElementPriority.TOP);
 
         findBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Find.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Find.text"))
                         .setIcon(Edit_find.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Find activated")).build(),
                 RibbonElementPriority.MEDIUM);
 
         findBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("FindReplace.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("FindReplace.text"))
                         .setIcon(Edit_find_replace.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Find Replace activated"))
                         .setEnabled(false).build(),
                 RibbonElementPriority.MEDIUM);
 
-        findBand.addRibbonCommand(new RibbonCommandBuilder()
+        findBand.addRibbonCommand(new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("SelectAll.text"))
                 .setIcon(Edit_select_all.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Select All activated")).build(),
@@ -768,9 +775,9 @@ public class BasicCheckRibbon extends JRibbonFrame {
         stylesGalleryVisibleCommandCounts.put(RibbonElementPriority.MEDIUM, 2);
         stylesGalleryVisibleCommandCounts.put(RibbonElementPriority.TOP, 2);
 
-        List<StringValuePair<List<RibbonCommand>>> stylesGalleryCommands = new ArrayList<StringValuePair<List<RibbonCommand>>>();
-        List<RibbonCommand> stylesGalleryCommandsList = new ArrayList<RibbonCommand>();
-        List<RibbonCommand> stylesGalleryCommandsList2 = new ArrayList<RibbonCommand>();
+        List<StringValuePair<List<FlamingoCommand>>> stylesGalleryCommands = new ArrayList<StringValuePair<List<FlamingoCommand>>>();
+        List<FlamingoCommand> stylesGalleryCommandsList = new ArrayList<FlamingoCommand>();
+        List<FlamingoCommand> stylesGalleryCommandsList2 = new ArrayList<FlamingoCommand>();
         MessageFormat mfButtonText = new MessageFormat(
                 resourceBundle.getString("StylesGallery.textButton"));
         mfButtonText.setLocale(currLocale);
@@ -791,7 +798,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         }
                     });
 
-            RibbonCommand ribbonCommand = new RibbonCommandBuilder()
+            FlamingoCommand ribbonCommand = new FlamingoCommandBuilder()
                     .setTitle(mfButtonText.format(new Object[] { i })).setIcon(finalIcon)
                     .setAction((ActionEvent e) -> System.out.println("Invoked action on " + index))
                     .setToggleSelected(i == 1).build();
@@ -803,10 +810,10 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 stylesGalleryCommandsList2.add(ribbonCommand);
         }
 
-        stylesGalleryCommands.add(new StringValuePair<List<RibbonCommand>>(
+        stylesGalleryCommands.add(new StringValuePair<List<FlamingoCommand>>(
                 resourceBundle.getString("StylesGallery.textGroupTitle1"),
                 stylesGalleryCommandsList));
-        stylesGalleryCommands.add(new StringValuePair<List<RibbonCommand>>(
+        stylesGalleryCommands.add(new StringValuePair<List<FlamingoCommand>>(
                 resourceBundle.getString("StylesGallery.textGroupTitle2"),
                 stylesGalleryCommandsList2));
 
@@ -841,14 +848,14 @@ public class BasicCheckRibbon extends JRibbonFrame {
         quickStylesBand.setRibbonGalleryExpandKeyTip("Styles", "L");
 
         quickStylesBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Styles1.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Styles1.text"))
                         .setIcon(Font_x_generic.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Generic activated"))
                         .setActionKeyTip("SA").build(),
                 RibbonElementPriority.MEDIUM);
 
         quickStylesBand.addRibbonCommand(
-                new RibbonCommandBuilder().setTitle(resourceBundle.getString("Styles2.text"))
+                new FlamingoCommandBuilder().setTitle(resourceBundle.getString("Styles2.text"))
                         .setIcon(Image_x_generic.of(16, 16))
                         .setAction((ActionEvent e) -> System.out.println("Image activated"))
                         .setActionKeyTip("SB").build(),
@@ -924,7 +931,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
             return result;
         };
 
-        quickStylesBand.addRibbonCommand(new RibbonCommandBuilder()
+        quickStylesBand.addRibbonCommand(new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("Styles3.text")).setIcon(Text_html.of(16, 16))
                 .setPopupCallback(popupCallback).setPopupKeyTip("SC").build(),
                 RibbonElementPriority.MEDIUM);
@@ -938,14 +945,14 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         previewBand.setResizePolicies(CoreRibbonResizePolicies.getCorePoliciesNone(previewBand));
 
-        previewBand.addRibbonCommand(new RibbonCommandBuilder()
+        previewBand.addRibbonCommand(new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("Preview.text"))
                 .setIcon(new SimpleResizableIcon(RibbonElementPriority.TOP, 32, 32))
                 .setAction((ActionEvent e) -> System.out.println("Preview activated")).build(),
                 RibbonElementPriority.TOP);
         previewBand
                 .addRibbonCommand(
-                        new RibbonCommandBuilder()
+                        new FlamingoCommandBuilder()
                                 .setTitle(resourceBundle.getString("SlideShow.text"))
                                 .setIcon(new SimpleResizableIcon(RibbonElementPriority.TOP, 32, 32))
                                 .setAction((ActionEvent e) -> System.out
@@ -1088,7 +1095,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         animationBand
                 .addRibbonCommand(
-                        new RibbonCommandBuilder()
+                        new FlamingoCommandBuilder()
                                 .setTitle(resourceBundle.getString("CustomAnimation.text"))
                                 .setIcon(new SimpleResizableIcon(RibbonElementPriority.TOP, 32, 32))
                                 .setAction((ActionEvent e) -> System.out
@@ -1097,7 +1104,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         RibbonElementPriority.TOP);
         animationBand
                 .addRibbonCommand(
-                        new RibbonCommandBuilder()
+                        new FlamingoCommandBuilder()
                                 .setTitle(resourceBundle.getString("CustomAnimation.text"))
                                 .setIcon(new SimpleResizableIcon(RibbonElementPriority.TOP, 32, 32))
                                 .setAction((ActionEvent e) -> System.out
@@ -1106,7 +1113,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         RibbonElementPriority.TOP);
         animationBand
                 .addRibbonCommand(
-                        new RibbonCommandBuilder()
+                        new FlamingoCommandBuilder()
                                 .setTitle(resourceBundle.getString("CustomAnimation.text"))
                                 .setIcon(new SimpleResizableIcon(RibbonElementPriority.TOP, 32, 32))
                                 .setAction((ActionEvent e) -> System.out
@@ -1130,9 +1137,9 @@ public class BasicCheckRibbon extends JRibbonFrame {
         transitionGalleryVisibleCommandCounts.put(RibbonElementPriority.MEDIUM, 4);
         transitionGalleryVisibleCommandCounts.put(RibbonElementPriority.TOP, 6);
 
-        List<StringValuePair<List<RibbonCommand>>> transitionGalleryCommands = new ArrayList<StringValuePair<List<RibbonCommand>>>();
+        List<StringValuePair<List<FlamingoCommand>>> transitionGalleryCommands = new ArrayList<StringValuePair<List<FlamingoCommand>>>();
 
-        List<RibbonCommand> transitionGalleryCommandsList = new ArrayList<RibbonCommand>();
+        List<FlamingoCommand> transitionGalleryCommandsList = new ArrayList<FlamingoCommand>();
         for (int i = 1; i <= 40; i++) {
             final int index = i;
             ResizableIcon mainIcon = new Appointment_new();
@@ -1155,17 +1162,17 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         }
                     });
 
-            RibbonCommand ribbonCommand = new RibbonCommandBuilder().setIcon(finalIcon)
+            FlamingoCommand ribbonCommand = new FlamingoCommandBuilder().setIcon(finalIcon)
                     .setAction((ActionEvent e) -> System.out.println("Activated action " + index))
                     .setToggle().build();
 
             transitionGalleryCommandsList.add(ribbonCommand);
         }
-        transitionGalleryCommands.add(new StringValuePair<List<RibbonCommand>>(
+        transitionGalleryCommands.add(new StringValuePair<List<FlamingoCommand>>(
                 resourceBundle.getString("TransitionGallery.textGroupTitle1"),
                 transitionGalleryCommandsList));
 
-        List<RibbonCommand> transitionGalleryButtonsList2 = new ArrayList<RibbonCommand>();
+        List<FlamingoCommand> transitionGalleryButtonsList2 = new ArrayList<FlamingoCommand>();
         for (int i = 41; i <= 70; i++) {
             final int index = i;
             ResizableIcon mainIcon = new Appointment_new();
@@ -1188,13 +1195,13 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         }
                     });
 
-            RibbonCommand ribbonCommand = new RibbonCommandBuilder().setIcon(finalIcon)
+            FlamingoCommand ribbonCommand = new FlamingoCommandBuilder().setIcon(finalIcon)
                     .setAction((ActionEvent e) -> System.out.println("Activated action " + index))
                     .setToggle().build();
 
             transitionGalleryButtonsList2.add(ribbonCommand);
         }
-        transitionGalleryCommands.add(new StringValuePair<List<RibbonCommand>>(
+        transitionGalleryCommands.add(new StringValuePair<List<FlamingoCommand>>(
                 resourceBundle.getString("TransitionGallery.textGroupTitle2"),
                 transitionGalleryButtonsList2));
 
@@ -1299,7 +1306,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
         this.getRibbon().addTask(wrappedTask);
 
         this.getRibbon()
-                .addAnchoredCommand(new RibbonCommandBuilder()
+                .addAnchoredCommand(new FlamingoCommandBuilder()
                         .setTitle(resourceBundle.getString("Share.title"))
                         .setIcon(Internet_mail.of(16, 16)).setActionKeyTip("GS")
                         .setAction((ActionEvent e) -> JOptionPane
@@ -1307,21 +1314,22 @@ public class BasicCheckRibbon extends JRibbonFrame {
                         .build());
 
         this.getRibbon()
-                .addAnchoredCommand(new RibbonCommandBuilder()
+                .addAnchoredCommand(new FlamingoCommandBuilder()
                         .setIcon(Internet_group_chat.of(16, 16)).setActionKeyTip("GC")
                         .setAction((ActionEvent e) -> JOptionPane
                                 .showMessageDialog(BasicCheckRibbon.this, "Chat button clicked"))
                         .build());
 
-        RichTooltip helpTooltip = new RichTooltip();
-        helpTooltip.setTitle(resourceBundle.getString("Help.tooltip.title"));
-        helpTooltip.addDescriptionSection(resourceBundle.getString("Help.tooltip.actionParagraph"));
-        this.getRibbon()
-                .addAnchoredCommand(new RibbonCommandBuilder().setIcon(Help_browser.of(16, 16))
-                        .setActionRichTooltip(helpTooltip).setActionKeyTip("GH")
-                        .setAction((ActionEvent e) -> JOptionPane
-                                .showMessageDialog(BasicCheckRibbon.this, "Help button clicked"))
-                        .build());
+        this.getRibbon().addAnchoredCommand(new FlamingoCommandBuilder()
+                .setIcon(Help_browser.of(16, 16))
+                .setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                        .setTitle(resourceBundle.getString("Help.tooltip.title"))
+                        .addDescriptionSection(
+                                resourceBundle.getString("Help.tooltip.actionParagraph"))
+                        .build())
+                .setActionKeyTip("GH").setAction((ActionEvent e) -> JOptionPane
+                        .showMessageDialog(BasicCheckRibbon.this, "Help button clicked"))
+                .build());
 
         group1 = new RibbonContextualTaskGroup(
                 resourceBundle.getString("Group1.textTaskGroupTitle"), Color.red,
@@ -1355,27 +1363,33 @@ public class BasicCheckRibbon extends JRibbonFrame {
         JRibbon ribbon = this.getRibbon();
 
         // taskbar components
-        ribbon.addTaskbarCommand(new RibbonCommandBuilder().setIcon(Edit_paste.of(16, 16))
+        ribbon.addTaskbarCommand(new FlamingoCommandBuilder().setIcon(Edit_paste.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Taskbar Paste activated"))
-                .setActionRichTooltip(new RichTooltip(resourceBundle.getString("Paste.text"),
-                        resourceBundle.getString("Paste.tooltip.actionParagraph1")))
+                .setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                        .setTitle(resourceBundle.getString("Paste.text"))
+                        .addDescriptionSection(
+                                resourceBundle.getString("Paste.tooltip.actionParagraph1"))
+                        .build())
                 .setActionKeyTip("1")
                 .setPopupCallback((JCommandButton commandButton) -> new SamplePopupMenu())
-                .setPopupRichTooltip(new RichTooltip(resourceBundle.getString("Paste.text"),
-                        resourceBundle.getString("Paste.tooltip.popupParagraph1")))
+                .setPopupRichTooltip(new RichTooltip.RichTooltipBuilder()
+                        .setTitle(resourceBundle.getString("Paste.text"))
+                        .addDescriptionSection(
+                                resourceBundle.getString("Paste.tooltip.popupParagraph1"))
+                        .build())
                 .setTitleClickAction().build());
 
-        ribbon.addTaskbarCommand(new RibbonCommandBuilder().setIcon(Edit_clear.of(16, 16))
+        ribbon.addTaskbarCommand(new FlamingoCommandBuilder().setIcon(Edit_clear.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Taskbar Clear activated"))
                 .setEnabled(false).setActionKeyTip("2").build());
 
-        ribbon.addTaskbarCommand(new RibbonCommandBuilder().setIcon(Edit_copy.of(16, 16))
+        ribbon.addTaskbarCommand(new FlamingoCommandBuilder().setIcon(Edit_copy.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Taskbar Copy activated"))
                 .setActionKeyTip("3").build());
 
         ribbon.addTaskbarSeparator();
 
-        ribbon.addTaskbarCommand(new RibbonCommandBuilder().setIcon(Edit_find.of(16, 16))
+        ribbon.addTaskbarCommand(new FlamingoCommandBuilder().setIcon(Edit_find.of(16, 16))
                 .setAction((ActionEvent e) -> System.out.println("Taskbar Find activated"))
                 .setActionKeyTip("4").build());
     }
@@ -1423,21 +1437,21 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 .setActionKeyTip("S").setEnabled(false).build();
 
         // "Save as" primary + secondaries
-        RibbonCommand amEntrySaveAsWord = new RibbonCommandBuilder()
+        FlamingoCommand amEntrySaveAsWord = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuSaveAs.word.text"))
                 .setIcon(X_office_document.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuSaveAs.word.description"))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked saved as Word"))
                 .setActionKeyTip("W").build();
 
-        RibbonCommand amEntrySaveAsHtml = new RibbonCommandBuilder()
+        FlamingoCommand amEntrySaveAsHtml = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuSaveAs.html.text"))
                 .setIcon(Text_html.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuSaveAs.html.description"))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked saved as HTML"))
                 .setActionKeyTip("H").setEnabled(false).build();
 
-        RibbonCommand amEntrySaveAsOtherFormats = new RibbonCommandBuilder()
+        FlamingoCommand amEntrySaveAsOtherFormats = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuSaveAs.other.text"))
                 .setIcon(Document_save_as.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuSaveAs.other.description"))
@@ -1455,34 +1469,34 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 .build();
 
         // "Print" primary + secondaries
-        RibbonCommand amEntryPrintSelect = new RibbonCommandBuilder()
+        FlamingoCommand amEntryPrintSelect = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuPrint.print.text"))
                 .setIcon(Printer.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuPrint.print.description"))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked print"))
                 .setActionKeyTip("P").build();
 
-        RibbonCommand amEntryPrintDefault = new RibbonCommandBuilder()
+        FlamingoCommand amEntryPrintDefault = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuPrint.quick.text"))
                 .setIcon(Printer.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuPrint.quick.description"))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked quick"))
                 .setActionKeyTip("Q").build();
 
-        RibbonCommand amEntryPrintPreview = new RibbonCommandBuilder()
+        FlamingoCommand amEntryPrintPreview = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuPrint.preview.text"))
                 .setIcon(Document_print_preview.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuPrint.preview.description"))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked preview"))
                 .setActionKeyTip("V").build();
 
-        RibbonCommand amEntryPrintMemo = new RibbonCommandBuilder()
+        FlamingoCommand amEntryPrintMemo = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuPrint.memo.text"))
                 .setIcon(Text_x_generic.of(16, 16))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked memo"))
                 .setActionKeyTip("M").build();
 
-        RibbonCommand amEntryPrintCustom = new RibbonCommandBuilder()
+        FlamingoCommand amEntryPrintCustom = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuPrint.custom.text"))
                 .setIcon(Text_x_generic.of(16, 16))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked custom"))
@@ -1502,28 +1516,28 @@ public class BasicCheckRibbon extends JRibbonFrame {
                 .build();
 
         // "Send" primary + secondaries
-        RibbonCommand amEntrySendMail = new RibbonCommandBuilder()
+        FlamingoCommand amEntrySendMail = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuSend.email.text"))
                 .setIcon(Mail_message_new.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuSend.email.description"))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked email"))
                 .setActionKeyTip("E").build();
 
-        RibbonCommand amEntrySendHtml = new RibbonCommandBuilder()
+        FlamingoCommand amEntrySendHtml = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuSend.html.text"))
                 .setIcon(Text_html.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuSend.html.description"))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked HTML"))
                 .setActionKeyTip("H").build();
 
-        RibbonCommand amEntrySendDoc = new RibbonCommandBuilder()
+        FlamingoCommand amEntrySendDoc = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuSend.word.text"))
                 .setIcon(X_office_document.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuSend.word.description"))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked Word"))
                 .setActionKeyTip("W").build();
 
-        RibbonCommand amEntrySendWireless = new RibbonCommandBuilder()
+        FlamingoCommand amEntrySendWireless = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuSend.wireless.text"))
                 .setIcon(Network_wireless.of(16, 16))
                 .setExtraText(resourceBundle.getString("AppMenuSend.wireless.description"))
@@ -1560,7 +1574,8 @@ public class BasicCheckRibbon extends JRibbonFrame {
         RibbonApplicationMenuPrimaryCommand amEntryExit = new RibbonApplicationMenuPrimaryCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuExit.text"))
                 .setIcon(System_log_out.of(16, 16)).setAction((ActionEvent ae) -> System.exit(0))
-                .setActionKeyTip("X").build();
+                .setActionKeyTip("X").setRolloverCallback(new PrimaryClearRolloverCallback())
+                .build();
 
         RibbonApplicationMenu applicationMenu = new RibbonApplicationMenu();
         applicationMenu.addMenuCommand(amEntryNew);
@@ -1594,11 +1609,11 @@ public class BasicCheckRibbon extends JRibbonFrame {
             targetPanel.add(openHistoryPanel, BorderLayout.CENTER);
         });
 
-        RibbonCommand amFooterProps = new RibbonCommandBuilder()
+        FlamingoCommand amFooterProps = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuOptions.text"))
                 .setIcon(Document_properties.of(16, 16))
                 .setAction((ActionEvent ae) -> System.out.println("Invoked Options")).build();
-        RibbonCommand amFooterExit = new RibbonCommandBuilder()
+        FlamingoCommand amFooterExit = new FlamingoCommandBuilder()
                 .setTitle(resourceBundle.getString("AppMenuExit.text"))
                 .setIcon(System_log_out.of(16, 16)).setAction((ActionEvent ae) -> System.exit(0))
                 .setEnabled(false).build();
@@ -1608,10 +1623,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         this.getRibbon().setApplicationMenu(applicationMenu);
 
-        RichTooltip appMenuRichTooltip = new RichTooltip();
-        appMenuRichTooltip.setTitle(resourceBundle.getString("AppMenu.tooltip.title"));
-        appMenuRichTooltip
-                .addDescriptionSection(resourceBundle.getString("AppMenu.tooltip.paragraph1"));
+        ResizableIcon appMenuRichTooltipMainIcon = null;
         try {
             final BufferedImage appMenuButtonTooltipImage = ImageIO
                     .read(BasicCheckRibbon.class.getResource(
@@ -1623,7 +1635,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
             final int appMenuButtonTooltipImageInitialWidth = 160;
             final int appMenuButtonTooltipImageInitialHeight = (int) (appMenuButtonTooltipImageInitialWidth
                     / appMenuButtonTooltipImageRatio);
-            appMenuRichTooltip.setMainImage(new ResizableIcon() {
+            appMenuRichTooltipMainIcon = new ResizableIcon() {
                 private int width;
                 private int height;
 
@@ -1648,13 +1660,17 @@ public class BasicCheckRibbon extends JRibbonFrame {
                     g.drawImage(appMenuButtonTooltipImage, x, y, getIconWidth(), getIconHeight(),
                             null);
                 }
-            }, new Dimension(appMenuButtonTooltipImageInitialWidth,
-                    appMenuButtonTooltipImageInitialHeight));
-            appMenuRichTooltip.setFooterIcon(Help_browser.of(16, 16));
+            };
+            appMenuRichTooltipMainIcon.setDimension(new Dimension(
+                    appMenuButtonTooltipImageInitialWidth, appMenuButtonTooltipImageInitialHeight));
         } catch (IOException ioe) {
         }
-        appMenuRichTooltip.addFooterSection(resourceBundle.getString("AppMenu.tooltip.footer1"));
-        this.getRibbon().setApplicationMenuRichTooltip(appMenuRichTooltip);
+
+        this.getRibbon().setApplicationMenuRichTooltip(new RichTooltip.RichTooltipBuilder()
+                .setTitle(resourceBundle.getString("AppMenu.tooltip.title"))
+                .addDescriptionSection(resourceBundle.getString("AppMenu.tooltip.paragraph1"))
+                .setMainIcon(appMenuRichTooltipMainIcon).setFooterIcon(Help_browser.of(16, 16))
+                .addFooterSection(resourceBundle.getString("AppMenu.tooltip.footer1")).build());
         this.getRibbon().setApplicationMenuKeyTip("F");
     }
 
@@ -1703,7 +1719,7 @@ public class BasicCheckRibbon extends JRibbonFrame {
         final JCheckBox taskbarEnabled = new JCheckBox("enabled");
         taskbarEnabled.setSelected(true);
         taskbarEnabled.addActionListener((ActionEvent e) -> SwingUtilities.invokeLater(() -> {
-            for (RibbonCommand command : getRibbon().getTaskbarCommands()) {
+            for (FlamingoCommand command : getRibbon().getTaskbarCommands()) {
                 command.setEnabled(taskbarEnabled.isSelected());
             }
         }));
@@ -1773,33 +1789,42 @@ public class BasicCheckRibbon extends JRibbonFrame {
 
         JCommandToggleButton styleBoldButton = new JCommandToggleButton("", new Format_text_bold());
         styleBoldButton.getActionModel().setSelected(true);
-        styleBoldButton.setActionRichTooltip(
-                new RichTooltip(resourceBundle.getString("FontBold.tooltip.textActionTitle"),
-                        resourceBundle.getString("FontBold.tooltip.textActionParagraph1")));
+        styleBoldButton
+                .setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                        .setTitle(resourceBundle.getString("FontBold.tooltip.textActionTitle"))
+                        .addDescriptionSection(
+                                resourceBundle.getString("FontBold.tooltip.textActionParagraph1"))
+                        .build());
         styleBoldButton.setActionKeyTip("1");
         styleStrip.add(styleBoldButton);
 
         JCommandToggleButton styleItalicButton = new JCommandToggleButton("",
                 new Format_text_italic());
-        styleItalicButton.setActionRichTooltip(
-                new RichTooltip(resourceBundle.getString("FontItalic.tooltip.textActionTitle"),
-                        resourceBundle.getString("FontItalic.tooltip.textActionParagraph1")));
+        styleItalicButton.setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                .setTitle(resourceBundle.getString("FontItalic.tooltip.textActionTitle"))
+                .addDescriptionSection(
+                        resourceBundle.getString("FontItalic.tooltip.textActionParagraph1"))
+                .build());
         styleItalicButton.setActionKeyTip("2");
         styleStrip.add(styleItalicButton);
 
         JCommandToggleButton styleUnderlineButton = new JCommandToggleButton("",
                 new Format_text_underline());
-        styleUnderlineButton.setActionRichTooltip(
-                new RichTooltip(resourceBundle.getString("FontUnderline.tooltip.textActionTitle"),
-                        resourceBundle.getString("FontUnderline.tooltip.textActionParagraph1")));
+        styleUnderlineButton.setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                .setTitle(resourceBundle.getString("FontUnderline.tooltip.textActionTitle"))
+                .addDescriptionSection(
+                        resourceBundle.getString("FontUnderline.tooltip.textActionParagraph1"))
+                .build());
         styleUnderlineButton.setActionKeyTip("3");
         styleStrip.add(styleUnderlineButton);
 
         JCommandToggleButton styleStrikeThroughButton = new JCommandToggleButton("",
                 new Format_text_strikethrough());
-        styleStrikeThroughButton.setActionRichTooltip(new RichTooltip(
-                resourceBundle.getString("FontStrikethrough.tooltip.textActionTitle"),
-                resourceBundle.getString("FontStrikethrough.tooltip.textActionParagraph1")));
+        styleStrikeThroughButton.setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                .setTitle(resourceBundle.getString("FontStrikethrough.tooltip.textActionTitle"))
+                .addDescriptionSection(
+                        resourceBundle.getString("FontStrikethrough.tooltip.textActionParagraph1"))
+                .build());
         styleStrikeThroughButton.setActionKeyTip("4");
         styleStrip.add(styleStrikeThroughButton);
 

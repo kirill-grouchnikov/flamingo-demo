@@ -55,8 +55,9 @@ import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
 import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.ibis.SvgBatikResizableIcon;
-import org.pushingpixels.ibis.SvgStreamTranscoder;
+import org.pushingpixels.ibis.icon.SvgBatikResizableIcon;
+import org.pushingpixels.ibis.transcoder.SvgStreamTranscoder;
+import org.pushingpixels.ibis.transcoder.java.JavaLanguageRenderer;
 
 /**
  * Panel that hosts SVG-based gallery buttons.
@@ -121,9 +122,9 @@ public class SvgFileViewPanel extends JPanel {
 
             JCommandButton svgButton = new JCommandButton(name.replace('-', ' '),
                     new EmptyResizableIcon(currDimension));
-            RichTooltip richTooltip = new RichTooltip("Transcode",
-                    "Click to generate Java2D class");
-            svgButton.setActionRichTooltip(richTooltip);
+            svgButton
+                    .setActionRichTooltip(new RichTooltip.RichTooltipBuilder().setTitle("Transcode")
+                            .addDescriptionSection("Click to generate Java2D class").build());
             svgButton.updateCustomDimension(currDimension);
 
             allButtons.add(svgButton);
@@ -163,9 +164,9 @@ public class SvgFileViewPanel extends JPanel {
                     JCommandButton svgButton = newButtons.get(name);
                     svgButton.setIcon(svgIcon);
 
-                    RichTooltip richTooltip = new RichTooltip("Transcode",
-                            "Click to generate Java2D class");
-                    svgButton.setActionRichTooltip(richTooltip);
+                    svgButton.setActionRichTooltip(new RichTooltip.RichTooltipBuilder()
+                            .setTitle("Transcode")
+                            .addDescriptionSection("Click to generate Java2D class").build());
                     svgButton.addActionListener((ActionEvent e) -> {
                         try {
                             System.out.println(name);
@@ -179,7 +180,8 @@ public class SvgFileViewPanel extends JPanel {
                             PrintWriter pw = new PrintWriter(javaClassFilename);
 
                             SvgStreamTranscoder transcoder = new SvgStreamTranscoder(
-                                    new ByteArrayInputStream(svgIcon.getSvgBytes()), svgClassName);
+                                    new ByteArrayInputStream(svgIcon.getSvgBytes()), svgClassName,
+                                    new JavaLanguageRenderer());
 
                             transcoder.setPrintWriter(pw);
                             transcoder.transcode(this.getClass()
